@@ -1,1 +1,78 @@
-<p>staff-layout works!</p>
+
+<div class="sidebar" [class.open]="isOpen">
+    <div class="logo-details">
+        <div >
+            <img class="icon" src="graduation_cap.png" alt="" width="45px">
+        </div>
+
+      <div class="logo_name">CampusSphear</div>
+      <i class='bx' [ngClass]="isOpen ? 'bx-menu-alt-right' : 'bx-menu'" id="btn" (click)="toggleSidebar()"></i>
+    </div>
+    <ul class="nav-list">
+
+      <li>
+        <a href="#" [routerLink]="['/staff']">
+          <i class='bx bx-home'></i>
+          <span class="links_name">Home</span>
+        </a>
+        <span class="tooltip">Home</span>
+      </li>
+
+      <li>
+        <a href="#" [routerLink]="['/staff/viewStudents']">
+            <i class="bi bi-person-plus-fill"></i>
+          <span class="links_name">Register Student</span>
+        </a>
+        <span class="tooltip">Register Student</span>
+      </li>
+
+      <li>
+        <a href="#" [routerLink]="['/staff/viewTimetable']">
+            <i class="bi bi-calendar3-range"></i>
+          <span class="links_name">Timetable</span>
+        </a>
+        <span class="tooltip">Add Timetable</span>
+      </li>
+
+      <li>
+        <a href="#" [routerLink]="['/staff/mark-attendance']" >
+            <i class="bi bi-card-checklist"></i>
+          <span class="links_name">Mark Attendance </span>
+        </a>
+        <span class="tooltip">Mark Attendance</span>
+      </li>
+
+
+      <li>
+        <a href="#" [routerLink]="['/staff/viewClassSubject']">
+          <i class="bi bi-person-lines-fill"></i>
+          <span class="links_name">Class & Subjects</span>
+        </a>
+        <span class="tooltip">Class & Subjects</span>
+      </li>
+
+
+
+
+
+      <li class="logout">
+        <div class="logout-details">
+          <div class="name_job">
+            <div class="name">STAFF</div>
+          </div>
+        </div>
+        <div [routerLink]="['/login']"  >
+          <i class='bx bx-log-out' id="log_out" ></i>
+        </div>
+
+      </li>
+
+    </ul>
+  </div>
+
+  <section class="home-section" [class.open]="isOpen">
+    <div class="text">
+        <router-outlet></router-outlet>
+    </div>
+  </section>
+
