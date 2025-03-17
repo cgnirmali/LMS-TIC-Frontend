@@ -1,0 +1,27 @@
+.gradient-custom-2 {
+    /* fallback for old browsers */
+    background: #797775;
+
+/* Chrome 10-25, Safari 5.1-6 */
+background: -webkit-linear-gradient(to right, #0e1924, #4776E6, #456bd6, #4767be);
+
+/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+background: linear-gradient(to right, #405cb8, #2d60da, #4c6fce, #4767be);
+background-image: url(/landingpage/vector-character-man-standing.avif);
+background-repeat: no-repeat;
+background-size: cover;
+
+    /* @media (min-width: 768px) {
+        .gradient-form {
+            height: 100vh !important;
+        }
+    } */
+
+    @media (min-width: 769px) {
+        .gradient-custom-2 {
+            border-top-right-radius: .3rem;
+            border-bottom-right-radius: .3rem;
+        }
+    }
+}
+
