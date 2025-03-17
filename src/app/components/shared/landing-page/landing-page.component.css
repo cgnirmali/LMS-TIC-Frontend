@@ -1,0 +1,250 @@
+/* Body Background */
+.body {
+    margin: 0;
+    padding: 10;
+  }
+  
+  .header {
+    background-image: linear-gradient(rgba(255, 255, 255 ,0.5), rgba(8, 3, 34, 0.9)), url(/landingpage/ai-generated-portrait-of-a-smiling-schoolgirl-using-laptop-in-classroom-at-school-photo\ \(1\).jpg);
+    height: 800px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-bottom-right-radius: 300px;
+  }
+  
+  /* Logo Image */
+  .logo img {
+    width: 150px;
+    height: auto;
+    
+  }
+  
+  .education {
+    color: rgb(8, 11, 59);
+  }
+  
+  /* Navbar Custom Styles */
+  .navbar-nav .nav-link {
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  .navbar-toggler {
+    position: absolute;
+    right: 0;
+  }
+  
+  /* Heading Section */
+  .display-1 {
+    font-weight: bold;
+  }
+  
+  .text-muted {
+    font-style: italic;
+  }
+  
+  .text-center p {
+    font-size: 18px;
+    font-family: 'Georgia', Times, serif;
+  }
+  
+  .text-center .lead {
+    font-size: 22px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: light;
+    color: rgb(0, 0, 0);
+    background-size: cover;
+  }
+  
+  /* Styling the about section */
+  #abut-unciom {
+    display: flex;
+    
+   
+  
+    margin-bottom: 100px;
+  }
+  
+  .text-section {
+     height: 30vh;
+    justify-content: center;
+    width: 50%; 
+   
+   
+   
+   
+  }
+  
+  
+  .lead{
+       padding: 20px;
+       background-size: cover;
+  }
+  /* image-slider.component.css */
+  .slider {
+    width: 100%;
+    height: 1000px;
+    padding-top: 400px;
+    justify-content: center;
+    align-items: center;
+  
+    
+   
+  }
+  
+  
+  @layer picture-border{
+    picture {
+      display: grid;
+      width: 600px;
+      height: 60vh;
+      aspect-ratio: 4/3;
+      --bc: rgba(61, 73, 231, 0.9); /*border-color*/
+      --bs: 10px; /*border-size*/
+      --cs: 20px; /*cut-size*/
+      grid-template-rows: var(--cs) auto 1fr;
+      margin-top: 300px;
+      
+    }
+    picture > figcaption {
+      grid-area: 1/1/2/2;
+      justify-self: end;
+      min-width: 50%;
+      min-height: calc(var(--cs) * 2 + var(--bs));
+      color: white;
+      font-weight: bold;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background-color: var(--bc);
+  
+      clip-path: polygon(
+        var(--cs) 0,
+        100% 0,
+        100% 100%,
+        0 100%,
+        0 var(--cs)
+      );
+    }
+    picture > img{
+      grid-area: 2/1/4/2;
+      width: 100%;
+      height: 100%; 
+      object-fit: cover;
+      --em: .5;
+      clip-path: polygon(
+        calc(var(--cs) + var(--bs) * var(--em)) var(--bs), 
+        calc(100% - var(--bs)) var(--bs),
+        calc(100% - var(--bs)) calc(100% - var(--cs) - var(--bs)),
+        calc(50% + var(--cs) - var(--bs) * var(--em)) calc(100% - var(--cs) - var(--bs)),
+        calc(50% - var(--bs) * var(--em)) calc(100% - var(--bs)),
+        var(--bs) calc(100% - var(--bs)),
+        var(--bs) calc(var(--cs) + var(--bs) * var(--em))
+        );    
+    }
+    picture::before{ /*border*/
+      content: "";
+      grid-area: 2/1/4/2;
+      background-color: var(--bc);
+      clip-path: polygon(
+        var(--cs) 0, 
+        100% 0,
+        100% calc(100% - var(--cs)),
+        calc(50% + var(--cs)) calc(100% - var(--cs)),
+        50% 100%,
+        0% 100%,
+        0 var(--cs)
+      );
+    }
+  }
+  
+  @layer demo {
+    html, body { height: 100% }
+    body { margin: 0; display: grid; place-items: center; background-color: black}
+  }
+  
+  
+
+  
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .heading-unicom {
+      font-size: 30px;
+    }
+  
+    .lead {
+      font-size: 16px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .heading-unicom {
+      font-size: 24px;
+    }
+  
+    .lead {
+      font-size: 14px;
+    }
+  }
+  
+  /* Icon Section */
+  i {
+    color: #525151;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  .img-fluid {
+    border-radius: 20px; /* Adjust the value for a more or less pronounced curve */
+    height: 30vh;
+  }
+  
+  /* Default image size */
+  .responsive-img {
+    width: 100%;
+    height: auto;
+  }
+  
+  /* Adjust image size on smaller screens */
+  @media (max-width: 770px) {
+    .responsive-img {
+      width: 80%;
+    }
+  }
+  
+  /* Adjust image size on larger screens */
+  @media (min-width: 1200px) {
+    .responsive-img {
+      width: 50%;
+    }
+  
+    i {
+      color: #525151;
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+  
+    #con_icon {
+      margin-left: 30px;
+      margin-right: 30px;
+    }
+  }
+  
+  /* Footer */
+  .footer {
+    font-size: 15px;
+    font-family: serif;
+  }
+  
+  .footer p {
+    font-size: 18px;
+    font-family: serif;
+  }
+  
+  .footer a:hover {
+    text-decoration: underline;
+  }
+  
+  
+  

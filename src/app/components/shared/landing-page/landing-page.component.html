@@ -1,1 +1,198 @@
-<p>landing-page works!</p>
+<div class="body">
+    <div class="header">
+      <!-- Header Section -->
+      <div class="container-fluid">
+        <div class="row align-items-center">
+          <div class="col-12 col-sm-3">
+            <!-- Logo -->
+            <div class="logo">
+              <img src="/landingpage/UNICOM-TIC_LOGO-2048x773.png" alt="Logo" class="img-fluid" />
+            </div>
+          </div>
+    
+    
+          <div class="col-12 col-sm-6">
+            <!-- Navigation Menu -->
+            <nav class="navbar navbar-expand-lg navbar-light">
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                  <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
+                  <!-- Link to the section -->
+                  <li class="nav-item"><a href="#abut-unciom" class="nav-link">About</a></li>
+                  <li class="nav-item"><a href="#" class="nav-link">Services</a></li>
+                  <li class="nav-item"><a href="#" class="nav-link">Portfolio</a></li>
+                  <li class="nav-item"><a href="#" class="nav-link">Blog</a></li>
+                </ul>
+              </div>
+            </nav>
+          </div>
+    
+          <div class="col-12 col-sm-3 text-center text-sm-end">
+            <button class="btn btn-primary btn-lg" style="color: rgb(255, 255, 255); background-color: rgb(16, 11, 70);" routerLink="/login">Start Learning</button>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Heading Section -->
+      <div class="text-center text-white py-5">
+        <h1 class="display-1"> <span class="education">Education</span> Opens <br> Up The Mind</h1>
+        <p style="color: rgb(24, 24, 24); ">"Your journey to mastering new skills begins here—learn, grow, and succeed."</p>
+      </div>
+    </div>
+    
+    <!-- Technologies You Will Learn Section -->
+    <div id="con_1" class="container-fluid py-5">
+      <h2 id="con_h2" class="text-center">Technologies You Will Learn</h2>
+      <div id="con_icon" class="d-flex justify-content-center mt-4" >
+    
+        <i class="fa-brands fa-java fa-3x mx-3"></i>
+        <i class="fa-brands fa-node fa-3x mx-3"></i>
+        <i class="fa-brands fa-angular fa-3x mx-3"></i>
+        <i class="fa-brands fa-bootstrap fa-3x mx-3"></i>
+        <i class="fa-brands fa-css3-alt fa-3x mx-3"></i>
+        <i class="fa-brands fa-html5 fa-3x mx-3"></i>
+      </div>
+    </div>
+     
+    
+    
+    <!-- Welcome Section -->
+    <div id="abut-unciom" class="d-flex justify-content-around align-items-center  ">
+      <div id="about" class="d-flex justify-content-between align-items-center">
+        
+            <!-- Image Slider Section -->
+    <!-- image-slider.component.html -->
+    <picture>
+        <img [src]="images[currentIndex]" alt="Image Slider">
+        <figcaption>OUR JOURNEY</figcaption>
+       </picture>
+        
+      
+    
+    </div>
+    
+    
+    
+    
+        <!-- Text Section -->
+        <div class="text-section">
+          <h2 class="heading-unicom black">Welcome To Unicom <span class="text-muted"><strong>TIC</strong></span></h2>
+          <p class="lead">
+            Unicom TIC is a technology and innovation center that offers educational <br> programs in various fields, including
+            software development, networking, and IT-related courses. <br>It focuses on providing students with practical
+            knowledge and hands-on experience to help them excel in their careers. <br>The institution is known for its high-quality
+            training, experienced faculty, and modern learning environment. <br><br>
+         
+            At Unicom TIC, students gain industry-relevant skills through project-based learning, <br>workshops, and real-world applications.
+            The center also emphasizes soft skills and communication <br> to ensure graduates are job-ready. Many students from Unicom TIC
+            pursue careers in software development, cybersecurity,<br> and IT support, making it a great choice for those looking to build <br>
+            a strong foundation in technology.
+          </p>
+        </div>
+        </div>
+        
+    
+    
+    <!-- Why Choose Us Section -->
+    <div class="container-fluid py-5">
+      <h2 class="text-center mb-4 ">Why choose Unicom TIC?</h2>
+      <div class="container px-0">
+        <div class="row mb-4 align-items-center">
+          <div class="col-md-6 text-md-start">
+            <h3>Industry-Ready Skill Development</h3>
+            <p>Our experienced instructors are not just lecturers; they are seasoned professionals with a wealth of
+              knowledge. They employ practical learning methods to ensure you’re well-prepared for the challenges of the
+              real world.</p>
+          </div>
+          <div class="col-md-6">
+            <img src="/landingpage/college-students-sitting-desks-classroom-listening-teacher_74855-10516.avif"
+              class="responsive-img img-fluid rounded" alt="Industry Skills">
+          </div>
+        </div>
+    
+        <div class="row mb-4 align-items-center text-center">
+          <div class="col-md-6 text-md-start order-md-2">
+            <h3>Tech-Ready in Months, Not Years</h3>
+            <p>In just 12 months, you’ll be equipped with the skills and knowledge necessary to thrive in the tech industry.
+            </p>
+          </div>
+          <div class="col-md-6 order-md-1">
+            <img src="/landingpage/skills.jpg" class="responsive-img img-fluid" alt="Tech-Ready Skills">
+          </div>
+        </div>
+    
+        <div class="row mb-4 align-items-center text-center">
+          <div class="col-md-6 text-md-start">
+            <h3>100% Scholarship: Full Program Funding</h3>
+            <p>The total course fee per student is LKR 925,000, but rest easy—we’ve already secured 100% of the funding for
+              your program.</p>
+          </div>
+          <div class="col-md-6">
+            <img src="/landingpage/scholarship.jpg" class="responsive-img img-fluid">
+          </div>
+        </div>
+    
+        <div class="row mb-4 align-items-center text-center">
+          <div class="col-md-6 text-md-start order-md-2">
+            <h3>Assured Careers: From Classroom to Workplace</h3>
+            <p>We’ve established strong partnerships with tech companies who have guaranteed 100% job placements for all
+              successful students. Your career starts the moment you complete the program successfully.</p>
+          </div>
+          <div class="col-md-6 order-md-1">
+            <img src="/landingpage/success.jpg" class="responsive-img img-fluid rounded" alt="Success">
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    <footer class="footer bg-dark text-light py-3">
+      <div class="container">
+        <div class="row text-center text-md-start">
+          <!-- Logo and Description -->
+        
+          <div class="col-md-4 mb-3">
+            <div class="logo">
+              <img src="/UNICOM-TIC_LOGO-2048x773.png" alt="Logo" class="img-fluid" />
+            </div>
+            <br>  
+            <h5>Unicom TIC</h5>
+            <p>Empowering students through digital learning.</p>
+          </div>
+    
+          <!-- Quick Links -->
+          <div class="col-md-4 mb-3">
+            <h5>Quick Links</h5>
+            <ul class="list-unstyled">
+              <li><a href="#" class="text-light text-decoration-none">Home</a></li>
+              <li><a href="#" class="text-light text-decoration-none">Courses</a></li>
+              <li><a href="#" class="text-light text-decoration-none">About Us</a></li>
+              <li><a href="#" class="text-light text-decoration-none">Contact</a></li>
+            </ul>
+          </div>
+    
+          <!-- Contact Info -->
+          <div class="col-md-4 mb-3">
+          
+            <p>Email: Unicomtic.com</p>
+            <p>Phone: +94 7400 30 977</p>
+            <p>address:Unicom Training and Innovation Center, MPCS Building, No 127, Kankesanthurai Road, Jaffna</p>
+            
+          </div>
+        </div>
+      
+        <hr>
+        
+        <!-- Bottom Footer -->
+        <div class="text-center mt-3">
+          <p class="mb-0">&copy; 2025 Unicom TIC. All Rights Reserved.</p>
+        </div>
+      </div>
+    </footer>
+    
+    </div>
