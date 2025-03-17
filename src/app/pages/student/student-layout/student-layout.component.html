@@ -1,0 +1,68 @@
+<div class="sidebar" [class.open]="isOpen">
+    <div class="logo-details">
+      <div>
+        <img class="icon" src="graduation_cap.png" alt="" width="45px">
+      </div>
+      <div class="logo_name">CampusSphear</div>
+      <i class='bx' [ngClass]="isOpen ? 'bx-menu-alt-right' : 'bx-menu'" id="btn" (click)="toggleSidebar()"></i>
+    </div>
+    <ul class="nav-list">
+  
+      <li>
+        <a [routerLink]="['/student']">
+  
+          <i class='bx bx-check-circle'></i>
+          <span class="links_name">Profile</span>
+        </a>
+        <span class="tooltip">Profile</span>
+      </li>
+      <li>
+        <a href="#" [routerLink]="['/student/attendance']">
+          <i class='bx bx-check-circle'></i>
+          <span class="links_name">Attendance</span>
+        </a>
+        <span class="tooltip">Attendance</span>
+      </li>
+      <li>
+        <a href="#" [routerLink]="['/student/timetable']">
+          <i class='bx bx-calendar'></i>
+          <span class="links_name">Timetable</span>
+        </a>
+        <span class="tooltip">Timetable</span>
+      </li>
+      <li>
+        <a href="#" [routerLink]="['/student/notification']">
+          <i class='bx bx-bell'></i>
+          <span class="links_name">Notifications</span>
+        </a>
+        <span class="tooltip">Notifications</span>
+      </li>
+      <li>
+        <a href="#" [routerLink]="['/student/feedback']">
+          <i class='bx bx-message-dots'></i>
+          <span class="links_name">Feedback</span>
+        </a>
+        <span class="tooltip">Feedback</span>
+      </li>
+      <li class="logout">
+        <div class="logout-details">
+          <div class="name_job">
+  
+            <div class="name"></div> <!-- Dynamically show the username -->
+          </div>
+        </div>
+        <i
+        class='bx bx-log-out'
+        id="log_out"
+        (click)="logout()"
+      ></i>
+      </li>
+    </ul>
+  </div>
+  
+  <section class="home-section" [class.open]="isOpen">
+    <div class="text">
+      <router-outlet></router-outlet>
+    </div>
+  </section>
+  
