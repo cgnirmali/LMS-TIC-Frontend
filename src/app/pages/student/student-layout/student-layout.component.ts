@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-student-layout',
@@ -9,5 +9,46 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   styleUrl: './student-layout.component.css'
 })
 export class StudentLayoutComponent {
+  isOpen = true;
+  // studentid: any | string;
+  userId: string = '';  // User ID will be fetched from localStorage
+  date = ''
 
+
+
+
+
+  toggleSidebar() {
+    this.isOpen = !this.isOpen;  // Toggle sidebar visibility
+  }
+
+  constructor
+    (
+   
+      private router:Router
+    ) {
+
+  }
+
+  ngOnInit(): void {
+
+ 
+  }
+
+  getStudentInfo(studentid: string) {
+    
+  }
+
+  logout() {
+    // Clear local storage
+    localStorage.clear();
+
+    // Redirect to the home page
+    this.router.navigate(['/']);
+  }
 }
+
+
+
+
+
