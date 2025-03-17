@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -10,13 +11,13 @@ import { RouterModule } from '@angular/router';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent implements OnInit {
-  step: number = 1; // Controls step navigation
+  step: number = 1;
   emailForm: FormGroup;
   otpForm: FormGroup;
   registrationForm: FormGroup;
-gender: any;
+  verifiedEmail: string = '';  // Store the verified email
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private http: HttpClient) {
     this.emailForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
     });
@@ -26,58 +27,104 @@ gender: any;
     });
 
     this.registrationForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
       firstName: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]],
       lastName: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]],
-      gender: ['',Validators.required],
-      phonenumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]], 
-      nic: ['', [Validators.required, Validators.pattern('^[0-9]{9}[VvXx]?$')]], 
-     
+      gender: ['', Validators.required],
+      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      nic: ['', [Validators.required, Validators.pattern('^[0-9]{9}[VvXx]?$')]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      ConfirmPassword: ['', Validators.required],
+      confirmPassword: ['', Validators.required],
       address: ['', Validators.required],
-   
-    } ,
+      utNumber: ['', [Validators.required]],
+      imageUrl: ['', [Validators.required]]
+    });
     
-  
-  );
   }
 
   ngOnInit(): void {
-    // Initialize the form with 'gender' control having an empty string as the default value
-    this.registrationForm = this.fb.group({
-      gender: ['', Validators.required], // Empty string sets the placeholder to visible initially
-      // other form controls...
-    });
+    console.log(this.registrationForm.invalid);
+    console.log(this.registrationForm.value);
+
+    // Check if email exists in local storage
+    const email = localStorage.getItem('verifiedEmail');
+    if (email) {
+      this.verifiedEmail = email;
+    }
   }
-  
-  // Simulate sending OTP and move to Step 2
+
   sendOtp() {
     if (this.emailForm.valid) {
-      console.log('OTP sent to:', this.emailForm.value.email);
-      this.step = 2;
+      const email = this.emailForm.value.email;
+      const url = `https://localhost:7265/api/User/send?email=${encodeURIComponent(email)}`;
+
+      this.http.post(url, {}).subscribe(
+        (response: any) => {
+          console.log('OTP Sent:', response);
+          this.step = 2;
+        },
+        (error) => {
+          console.error('Error sending OTP:', error);
+          alert(`Failed to send OTP. ${error.error?.message || 'Please try again.'}`);
+        }
+      );
     }
-    this.registrationForm = this.fb.group({
-      gender: ['', Validators.required]  // Set default value to empty string
-    });
   }
 
-  // Simulate OTP verification and move to Step 3
   verifyOtp() {
     if (this.otpForm.valid) {
-      console.log('OTP Verified:', this.otpForm.value.otp);
-      this.step = 3;
+      const email = this.emailForm.value.email;
+      const otp = this.otpForm.value.otp;
+      const payload = { email: email, otp: otp };
+
+      this.http.post('https://localhost:7265/api/User/VerifyOtp', payload).subscribe(
+        (response: any) => {
+          console.log('OTP Verified:', response);
+          // Save the email in localStorage
+          localStorage.setItem('verifiedEmail', email);
+          this.verifiedEmail = email; // Optionally store it in a variable as well
+          this.step = 3; // Move to Step 3 (Registration)
+        },
+        (error) => {
+          console.error('Error verifying OTP:', error);
+          alert(`Failed to verify OTP. ${error.error?.message || 'Please try again.'}`);
+        }
+      );
     }
   }
 
-  // Simulate user registration
   register() {
     if (this.registrationForm.valid) {
-      console.log('User Registered:', this.registrationForm.value);
-      alert('Registration Successful!');
-      this.step = 1; // Reset to Step 1 after successful registration
-      this.emailForm.reset();
-      this.otpForm.reset();
-      this.registrationForm.reset();
+      // Retrieve the email from localStorage
+      const email = localStorage.getItem('verifiedEmail');
+
+      // Ensure the email is available
+      if (email) {
+        // Update the registration form with the verified email
+        this.registrationForm.patchValue({ email: email });
+      } else {
+        alert('Email is not verified. Please verify your email first.');
+        return;
+      }
+
+      console.log('Registration Form Value:', this.registrationForm.value);
+
+      const registrationData = this.registrationForm.value;
+      this.http.post('https://localhost:7265/api/Student/register-new-student', registrationData).subscribe(
+        (response: any) => {
+          console.log('Student Registered:', response);
+          alert('Registration Successful!');
+          this.step = 1;
+          this.emailForm.reset();
+          this.otpForm.reset();
+          this.registrationForm.reset();
+          localStorage.removeItem('verifiedEmail'); // Clear the email from localStorage after registration
+        },
+        (error) => {
+          console.error('Error registering student:', error);
+          
+        }
+      );
     }
   }
 }

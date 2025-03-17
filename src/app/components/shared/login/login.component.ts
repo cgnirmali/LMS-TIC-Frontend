@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,40 +11,45 @@ import { RouterModule } from '@angular/router';
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
-  loginForm!: FormGroup;  // Non-null assertion operator
-  isLoading = false; // Initialize loading state
+  loginForm!: FormGroup;
+  isLoading = false;
   errorMessage: string | undefined;
 
+  constructor(private http: HttpClient, private router: Router) {}
+
   ngOnInit(): void {
-    // Initialize the form group with controls for email and password
     this.loginForm = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),  // Add validators for email
-      password: new FormControl('', [Validators.required, Validators.minLength(6)]),  // Add password validation
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.loginForm.invalid) {
-      return;  // If form is invalid, prevent submission
+      return;
     }
 
-    this.isLoading = true;  // Set isLoading to true when form is submitted
+    this.isLoading = true;
+    this.errorMessage = undefined; // Clear any previous error messages
 
-    // Simulate a login request (replace with actual logic)
-    setTimeout(() => {
-      // Here, you would make your login API request and handle success/failure
-      const success = true; // For example, login is successful.
+    const loginData = this.loginForm.value;
 
-      if (success) {
-        // If successful, handle success (e.g., navigate to another page, show a success message)
-        this.isLoading = false;  // Set isLoading back to false
-        // this.toastr.success('Logged in successfully!');
-      } else {
-        // If login fails, handle failure (e.g., show error message)
-        this.isLoading = false;  // Set isLoading back to false
+    this.http.post<any>('https://localhost:7265/api/Auth/login', loginData).subscribe(
+      response => {
+        this.isLoading = false;
+        localStorage.setItem('token', response.token.token);
+        localStorage.setItem('userRole', response.user.role.toString());
+
+        if (response.user.role === 1) {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
+      },
+      error => {
+        this.isLoading = false;
         this.errorMessage = 'Login failed. Please check your credentials and try again.';
-        // this.toastr.error('Login failed');
       }
-    }, 2000);  // Simulating a delay of 2 seconds (replace with actual API call delay)
+    );
   }
 }
