@@ -1,140 +1,152 @@
 <section id="body" class="min-vh-100 gradient-form d-flex align-items-center justify-content-center">
-    <div id="container" class="container py-5">
-      <div class="row d-flex justify-content-center align-items-center">
-        <div class="col-xl-10">
-          <div class="card shadow-lg">
-            <div class="row g-0">
-              <!-- Left Side (Form) -->
-              <div class="col-lg-6">
-                <div class="card-body p-md-5 mx-md-4 rounded-3">
-                  <div class="text-center">
-                    <img src="/landingpage/email.jpg" class="mb-4" style="height: 18vh;" alt="logo">
+  <div id="container" class="container py-5">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col-xl-10">
+        <div class="card shadow-lg">
+          <div class="row g-0">
+            <div class="col-lg-6">
+              <div class="card-body p-md-5 mx-md-4 rounded-3">
+                <div class="text-center">
+                  <img src="/landingpage/email.jpg" class="mb-4" style="height: 18vh;" alt="logo">
+                </div>
+
+                <div class="text-center">
+                  <h2 class="step-title" *ngIf="step === 1">Enter Your Email</h2>
+                  <h2 class="step-title" *ngIf="step === 2">Step 2: Enter OTP</h2>
+                  <h2 class="step-title" *ngIf="step === 3">Step 3: Registration</h2>
+                </div>
+
+                <div class="container2 d-flex flex-column justify-content-between">
+                  <div *ngIf="step === 1">
+                    <form [formGroup]="emailForm" (ngSubmit)="sendOtp()">
+                      <div class="mb-3">
+                        <input type="email" class="form-control" formControlName="email" placeholder="Enter your email" required>
+                      </div>
+                      <button type="submit" class="btn btn-primary w-100" [disabled]="emailForm.invalid">
+                        Send OTP
+                      </button>
+                    </form>
                   </div>
-  
-                  <!-- Step Heading (Always Visible on Top) -->
-                  <div class="text-center">
-                    <h2 class="step-title" *ngIf="step === 1">Enter Your Email</h2>
-                    <h2 class="step-title" *ngIf="step === 2">Step 2: Enter OTP</h2>
-                    <h2 class="step-title" *ngIf="step === 3">Step 3: Registration</h2>
+
+                  <div *ngIf="step === 2">
+                    <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
+                      <div class="mb-3">
+                        <input type="text" class="form-control" formControlName="otp" placeholder="Enter OTP" required>
+                      </div>
+                      <button type="submit" class="btn btn-success w-100" [disabled]="otpForm.invalid">
+                        Verify OTP
+                      </button>
+                    </form>
                   </div>
-  
-                  <div class="container2 d-flex flex-column justify-content-between">
-                    <!-- Step 1: Email Input -->
-                    <div *ngIf="step === 1">
-                      <form [formGroup]="emailForm" (ngSubmit)="sendOtp()">
-                        <div class="mb-3">
-                          <input type="email" class="form-control" formControlName="email" placeholder="Enter your email"
-                            required>
+
+                  <div *ngIf="step === 3">
+                    <form [formGroup]="registrationForm" (ngSubmit)="register()">
+                      <!-- Email Input -->
+                      <div class="mb-3">
+                        <input type="email" class="form-control" formControlName="email" placeholder="Email" required>
+                        <div *ngIf="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched" class="error-message">
+                          Please enter a valid email
                         </div>
-                        <button type="submit" class="btn btn-primary w-100" [disabled]="emailForm.invalid">
-                          Send OTP
-                        </button>
-                      </form>
-                    </div>
-  
-                    <!-- Step 2: OTP Verification -->
-                    <div *ngIf="step === 2">
-                      <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
-                        <div class="mb-3">
-                          <input type="text" class="form-control" formControlName="otp" placeholder="Enter OTP" required>
+                      </div>
+
+                      <!-- Other form fields -->
+                      <div class="mb-3">
+                        <input type="text" class="form-control" formControlName="firstName" placeholder="First Name" required>
+                        <div *ngIf="registrationForm.get('firstName')?.invalid && registrationForm.get('firstName')?.touched" class="error-message">
+                          First Name is required and must be at least 3 characters
                         </div>
-                        <button type="submit" class="btn btn-success w-100" [disabled]="otpForm.invalid">
-                          Verify OTP
-                        </button>
-                      </form>
-                    </div>
-  
-                    <!-- Step 3: Registration Form -->
-                    <div *ngIf="step === 3">
-                      <form [formGroup]="registrationForm" (ngSubmit)="register()">
-                        <div class="mb-3">
-                          <input type="text" class="form-control" formControlName="firstName" placeholder="First Name" required>
-                          <div *ngIf="registrationForm.get('firstName')?.invalid && registrationForm.get('firstName')?.touched" class="error-message">
-                            First Name is required and must be at least 3 characters
-                          </div>
+                      </div>
+
+                      <div class="mb-3">
+                        <input type="text" class="form-control" formControlName="lastName" placeholder="Last Name" required>
+                        <div *ngIf="registrationForm.get('lastName')?.invalid && registrationForm.get('lastName')?.touched" class="error-message">
+                          Last Name is required and must be at least 3 characters
                         </div>
+                      </div>
+
+                      <div class="mb-3">
+                        <select id="gender" name="gender" class="form-control" formControlName="gender">
+                          <option value="" disabled selected>Select Gender</option>
+                          <option value="1">Male</option>
+                          <option value="2">Female</option>
+                        </select>
+                        <div *ngIf="registrationForm.get('gender')?.invalid && registrationForm.get('gender')?.touched" class="error-message">
+                          Please select a gender
+                        </div>
+                      </div>
                       
-                        <div class="mb-3">
-                          <input type="text" class="form-control" formControlName="lastName" placeholder="Last Name" required>
-                          <div *ngIf="registrationForm.get('lastName')?.invalid && registrationForm.get('lastName')?.touched" class="error-message">
-                            Last Name is required and must be at least 3 characters
-                          </div>
+                      <div class="mb-3">
+                        <input type="text" class="form-control" formControlName="phoneNumber" placeholder="Phone Number" required>
+                        <div *ngIf="registrationForm.get('phoneNumber')?.invalid && registrationForm.get('phoneNumber')?.touched" class="error-message">
+                          Please enter a valid phone number
                         </div>
-                      
-                        <div class="mb-3">
-                          <select id="gender" name="gender" class="form-control" formControlName="gender">
-                            <option value="" disabled selected>Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                          </select>
-                          <div *ngIf="registrationForm.get('gender')?.invalid && registrationForm.get('gender')?.touched" class="error-message">
-                            Please select a gender
-                          </div>
-                        </div>
-                      
-                        <div class="mb-3">
-                          <input type="text" class="form-control" formControlName="phonenumber" placeholder="Phone Number" required>
-                          <div *ngIf="registrationForm.get('phonenumber')?.invalid && registrationForm.get('phonenumber')?.touched" class="error-message">
-                            Please enter a valid phone number
-                          </div>
-                        </div>
-                      
-                        <div class="mb-3">
-                          <input type="text" class="form-control" formControlName="nic" placeholder="NIC" required>
-                          <div *ngIf="registrationForm.get('nic')?.invalid && registrationForm.get('nic')?.touched" class="error-message">
-                            NIC is required and must be in a valid format
-                          </div>
-                        </div>
+                      </div>
                     
-                      
-                        <div class="mb-3">
-                          <input type="password" class="form-control" formControlName="password" placeholder="Password" required>
-                          <div *ngIf="registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched" class="error-message">
-                            Password is required and must be at least 6 characters
-                          </div>
+                      <div class="mb-3">
+                        <input type="text" class="form-control" formControlName="nic" placeholder="NIC" required>
+                        <div *ngIf="registrationForm.get('nic')?.invalid && registrationForm.get('nic')?.touched" class="error-message">
+                          NIC is required and must be in a valid format
                         </div>
-                      
-                        <div class="mb-3">
-                          <input type="password" class="form-control" formControlName="ConfirmPassword" placeholder="Confirm Password" required>
-                          <div *ngIf="registrationForm.get('ConfirmPassword')?.invalid && registrationForm.get('ConfirmPassword')?.touched" class="error-message">
-                            Please confirm the password
-                          </div>
+                      </div>
+
+                      <div class="mb-3">
+                        <input type="text" class="form-control" formControlName="utNumber" placeholder="UT Number" required>
+                        <div *ngIf="registrationForm.get('utNumber')?.invalid && registrationForm.get('utNumber')?.touched" class="error-message">
+                          UT Number is required
                         </div>
-                      
-                        <div class="mb-3">
-                          <input type="text" class="form-control" formControlName="address" placeholder="Address" required>
-                          <div *ngIf="registrationForm.get('address')?.invalid && registrationForm.get('address')?.touched" class="error-message">
-                            Address is required
-                          </div>
+                      </div>
+                    
+                      <div class="mb-3">
+                        <input type="text" class="form-control" formControlName="imageUrl" placeholder="Image URL" required>
+                        <div *ngIf="registrationForm.get('imageUrl')?.invalid && registrationForm.get('imageUrl')?.touched" class="error-message">
+                          Image URL is required
                         </div>
-                      
-                        <button type="submit" class="btn btn-info w-100" [disabled]="registrationForm.invalid">
-                          Register
-                        </button>
-                      </form>
-                      
-                    </div>
-  
-                    <!-- Step Indicator at the Bottom -->
-                    <div class="step-indicator text-center mt-4">
-                      <span [ngClass]="{'active-step': step === 1}">●</span>
-                      <span [ngClass]="{'active-step': step === 2}">●</span>
-                      <span [ngClass]="{'active-step': step === 3}">●</span>
-                    </div>
+                      </div>
+
+                      <div class="mb-3">
+                        <input type="password" class="form-control" formControlName="password" placeholder="Password" required>
+                        <div *ngIf="registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched" class="error-message">
+                          Password is required and must be at least 6 characters
+                        </div>
+                      </div>
+
+                      <div class="mb-3">
+                        <input type="password" class="form-control" formControlName="confirmPassword" placeholder="Confirm Password" required>
+                        <div *ngIf="registrationForm.get('confirmPassword')?.invalid && registrationForm.get('confirmPassword')?.touched" class="error-message">
+                          Please confirm the password
+                        </div>
+                      </div>
+                    
+                      <div class="mb-3">
+                        <input type="text" class="form-control" formControlName="address" placeholder="Address" required>
+                        <div *ngIf="registrationForm.get('address')?.invalid && registrationForm.get('address')?.touched" class="error-message">
+                          Address is required
+                        </div>
+                      </div>
+                    
+                      <button type="submit" class="btn btn-info w-100" [disabled]="registrationForm.invalid">
+                        Register
+                      </button>
+                    </form>
+                  </div>
+
+                  <div class="step-indicator text-center mt-4">
+                    <span [ngClass]="{'active-step': step === 1}">●</span>
+                    <span [ngClass]="{'active-step': step === 2}">●</span>
+                    <span [ngClass]="{'active-step': step === 3}">●</span>
                   </div>
                 </div>
               </div>
-  
-              <!-- Right Side (Image & Background) -->
-              <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
-                <div class="text-white px-4 py-5 mx-md-4">
-                </div>
-              </div>
-  
             </div>
+
+            <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+              <div class="text-white px-4 py-5 mx-md-4">
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>

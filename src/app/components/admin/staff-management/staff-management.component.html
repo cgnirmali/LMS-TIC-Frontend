@@ -1,131 +1,92 @@
 <div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2>STAFF'S LIST</h2>
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >
-        Add Staff
-         </button>
-    </div>
-  
-    <div class="table-responsive">
-      <table class="table table-bordered table-hover table-striped align-middle">
-        <thead class="table-dark">
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let staff of staffs">
-            <td>{{ staff.name }}</td>
-            <td>{{ staff.userRes.email }}</td>
-            <td>{{ staff.phone }}</td>
-  
-            <td>
-                <div class="d-flex justify-content-evenly">
-                  <button class="btn btn-danger"(click)="DeleteStaff(staff.id)">
-                    <i class="bi bi-person-x-fill"></i>
-                  </button>
-                  <button class="btn btn-warning" (click)="EditStaff(staff.id)">
-                    <i class="bi bi-pencil-square"></i>
-                  </button>
-                </div>
-              </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>STAFF'S LIST</h2>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+      Add Staff
+    </button>
   </div>
-    
-  
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div class="modal-dialog" style="max-width: 1000px;">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Staff</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" id="model-body">
-             
-            <div class="pic">
-              <img src="/landingpage/staff.jpg" alt="">
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover table-striped align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let staff of staffs">
+          <td>{{ staff.name }}</td>
+          <td>{{ staff.email }}</td>
+          <td>{{ staff.phoneNumber }}</td>
+          <td>
+            <div class="d-flex justify-content-evenly">
+              <button class="btn btn-danger" (click)="DeleteStaff(staff.id)">
+                <i class="bi bi-person-x-fill"></i>
+              </button>
+              <button class="btn btn-warning" (click)="EditStaff(staff.id)">
+                <i class="bi bi-pencil-square"></i>
+              </button>
             </div>
-  
-              <form [formGroup]="registrationForm" (ngSubmit)="register()">
-                  <div class="mb-3">
-                    <input type="text" class="form-control" formControlName="firstName" placeholder="First Name" required>
-                    <div *ngIf="registrationForm.get('firstName')?.invalid && registrationForm.get('firstName')?.touched" class="error-message" >
-                      First Name is required and must be at least 3 characters
-                    </div>
-                  </div>
-                
-                  <div class="mb-3">
-                    <input type="text" class="form-control" formControlName="lastName" placeholder="Last Name" required>
-                    <div *ngIf="registrationForm.get('lastName')?.invalid && registrationForm.get('lastName')?.touched" class="error-message">
-                      Last Name is required and must be at least 3 characters
-                    </div>
-                  </div>
-                
-                  <div class="mb-3">
-                    <select id="gender" name="gender" class="form-control" formControlName="gender">
-                      <option value="" disabled selected>Select Gender</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                      <option value="other">Other</option>
-                    </select>
-                    <div *ngIf="registrationForm.get('gender')?.invalid && registrationForm.get('gender')?.touched" class="error-message">
-                      Please select a gender
-                    </div>
-                  </div>
-                
-                  <div class="mb-3">
-                    <input type="text" class="form-control" formControlName="phonenumber" placeholder="Phone Number" required>
-                    <div *ngIf="registrationForm.get('phonenumber')?.invalid && registrationForm.get('phonenumber')?.touched" class="error-message">
-                      Please enter a valid phone number
-                    </div>
-                  </div>
-                
-                  <div class="mb-3">
-                    <input type="text" class="form-control" formControlName="nic" placeholder="NIC" required>
-                    <div *ngIf="registrationForm.get('nic')?.invalid && registrationForm.get('nic')?.touched" class="error-message">
-                      NIC is required and must be in a valid format
-                    </div>
-                  </div>
-                
-                 
-                  <div class="mb-3">
-                    <input type="password" class="form-control" formControlName="password" placeholder="Password" required>
-                    <div *ngIf="registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched" class="error-message">
-                      Password is required and must be at least 6 characters
-                    </div>
-                  </div>
-                
-                  <div class="mb-3">
-                    <input type="password" class="form-control" formControlName="ConfirmPassword" placeholder="Confirm Password" required>
-                    <div *ngIf="registrationForm.get('ConfirmPassword')?.invalid && registrationForm.get('ConfirmPassword')?.touched" class="error-message">
-                      Please confirm the password
-                    </div>
-                  </div>
-                
-                  <div class="mb-3">
-                    <input type="text" class="form-control" formControlName="address" placeholder="Address" required>
-                    <div *ngIf="registrationForm.get('address')?.invalid && registrationForm.get('address')?.touched" class="error-message">
-                      Address is required
-                    </div>
-                  </div>
-                
-                  <button type="submit" class="btn btn-info w-100" [disabled]="registrationForm.invalid">
-                    Register
-                  </button>
-                </form>
-          </div>
-          <div class="modal-footer">
-          
-          
-          </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add Staff Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog" style="max-width: 1000px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Staff</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="model-body">
+        <div class="pic">
+          <img src="/landingpage/staff.jpg" alt="">
         </div>
+
+        <form [formGroup]="registrationForm" (ngSubmit)="register()">
+          <div class="mb-3">
+            <input type="text" class="form-control" formControlName="firstName" placeholder="First Name" required>
+          </div>
+          <div class="mb-3">
+            <input type="text" class="form-control" formControlName="lastName" placeholder="Last Name" required>
+          </div>
+          <div class="mb-3">
+            <select class="form-control" formControlName="gender">
+              <option value="" disabled selected>Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <input type="text" class="form-control" formControlName="phonenumber" placeholder="Phone Number" required>
+          </div>
+          <div class="mb-3">
+            <input type="text" class="form-control" formControlName="nic" placeholder="NIC" required>
+          </div>
+          <div class="mb-3">
+            <input type="password" class="form-control" formControlName="password" placeholder="Password" required>
+          </div>
+          <div class="mb-3">
+            <input type="password" class="form-control" formControlName="ConfirmPassword" placeholder="Confirm Password" required>
+            <div *ngIf="registrationForm.hasError('mismatch')" class="error-message">
+              Passwords do not match!
+            </div>
+          </div>
+          <div class="mb-3">
+            <input type="text" class="form-control" formControlName="address" placeholder="Address" required>
+          </div>
+          <button type="submit" class="btn btn-info w-100" [disabled]="registrationForm.invalid || registrationForm.get('ConfirmPassword')?.hasError('mismatch')">
+            Register
+          </button>
+        </form>
       </div>
     </div>
-  
-  
+  </div>
+</div>
