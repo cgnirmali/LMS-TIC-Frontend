@@ -1,54 +1,93 @@
-<div class="container d-flex justify-content-center align-items-center mt-5" style="gap: 2rem;">
-    
-    <div class="box text-center">
-      <h3>ADD NEW BATCH</h3>
-      <form [formGroup]="batchForm" (ngSubmit)="addBatch()" class="form">
-        <input
-          id="batchName"
-          type="text"
-          class="form-control mt-3"
-          formControlName="name"
-          placeholder="Enter Batch Name"
-        />
-        <div
-          *ngIf="
-            batchForm.get('name')?.invalid &&
-            batchForm.get('name')?.touched
-          "
-          class="text-danger mt-2"
-        >
-          Batch name is required and must be at least 2 characters.
-        </div>
-    
-        <!-- Error Message -->
-        <div *ngIf="errorMessage" class="text-danger mt-2">
-          {{ errorMessage }}
-        </div>
-    
-        <button
-          type="submit"
-          class="btn btn-primary w-100 mt-3"
-          [disabled]="batchForm.invalid"
-        >
-          Add Batch
-        </button>
-      </form>
+<div class="container mt-5">
+    <!-- Table Header with Add Button -->
+    <div class="d-flex justify-content-between mb-3">
+      <h3>Batch Management</h3>
+      <button class="btn btn-primary" (click)="openModal()">
+        Add Batch
+      </button>
     </div>
-  
-    <!-- Right Box: Existing Batches -->
-    <div class="box text-center">
-      <h3>Existing Batches</h3>
-      <ul class="list-group mt-3">
-        <li
-          *ngFor="let batch of batches"
-          class="list-group-item d-flex justify-content-between align-items-center"
-        >
-          {{ batch.name }}
-          <button class="btn btn-danger btn-sm" (click)="deleteBatch(batch.id)">
-            Delete
-          </button>
-        </li>
-      </ul>
+    
+    <!-- Batches Table (always visible) -->
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Batch Name</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="batches.length === 0">
+            <td colspan="2" class="text-center">No batches available</td>
+          </tr>
+          <tr *ngFor="let batch of batches">
+            <td>{{ batch.name }}</td>
+            <td>
+              <button class="btn btn-success btn-sm me-2" (click)="approveBatch(batch.id)">
+                Edit
+              </button>
+              <button class="btn btn-danger btn-sm" (click)="rejectBatch(batch.id)">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+    
+    <!-- Modal for Adding Batch -->
+    <div class="modal" [ngClass]="{'d-block': isModalOpen, 'd-none': !isModalOpen}">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add New Batch</h5>
+            <button type="button" class="btn-close" (click)="closeModal()"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="batchForm" (ngSubmit)="addBatch()" class="form">
+              <div class="mb-3">
+                <label for="batchName" class="form-label">Batch Name</label>
+                <input
+                  id="batchName"
+                  type="text"
+                  class="form-control"
+                  formControlName="name"
+                  placeholder="Enter Batch Name"
+                />
+                <div
+                  *ngIf="
+                    batchForm.get('name')?.invalid &&
+                    batchForm.get('name')?.touched
+                  "
+                  class="text-danger mt-2"
+                >
+                  Batch name is required and must be at least 2 characters.
+                </div>
+              </div>
+              
+              <!-- Error Message -->
+              <div *ngIf="errorMessage" class="alert alert-danger mt-2">
+                {{ errorMessage }}
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">
+              Cancel
+            </button>
+            <button 
+              type="button" 
+              class="btn btn-primary" 
+              [disabled]="batchForm.invalid"
+              (click)="addBatch()"
+            >
+              Add Batch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Modal Backdrop -->
+    <div class="modal-backdrop fade show" *ngIf="isModalOpen"></div>
   </div>
-  

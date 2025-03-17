@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { BatchService } from '../../../services/batch.service';
+import { BatchService, Batch } from '../../../services/batch.service';
 
 @Component({
   selector: 'app-batch',
@@ -10,14 +10,15 @@ import { BatchService } from '../../../services/batch.service';
   templateUrl: './batch.component.html',
   styleUrl: './batch.component.css'
 })
-export class BatchComponent {
+export class BatchComponent implements OnInit{
   batchForm: FormGroup;
-  batches: { id: number; name: string }[] = [];
-  errorMessage: string | null = null;
+  batches: Batch[] =[];
+  errorMessage: string = '';
+  isModalOpen: boolean = false;
 
   constructor(private fb: FormBuilder, private batchService: BatchService) {
     this.batchForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
+      name: ['', [Validators.required, Validators.minLength(2)]]
     });
   }
 
@@ -25,62 +26,59 @@ export class BatchComponent {
     this.loadBatches();
   }
 
-  // Load batches from the backend
   loadBatches(): void {
-    this.batchService.getBatches().subscribe({
-      next: (data) => (this.batches = data),
-      error: (err) => console.error('Failed to fetch batches:', err),
-    });
+    this.batchService.getBatches().subscribe(
+      (data: Batch[]) => this.batches = data,
+      (error: Error) => this.errorMessage = 'Failed to load batches'
+    );
   }
 
-  // Add a new batch dynamically
+  openModal(): void {
+    this.isModalOpen = true;
+    this.errorMessage = '';
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
+    this.batchForm.reset();
+  }
+
   addBatch(): void {
     if (this.batchForm.valid) {
-      const batchName = this.batchForm.value.name;
-  
-      this.batchService.addBatch(batchName).subscribe({
-        next: (newBatch) => {
-          // Clear any previous error
-          this.errorMessage = null;
-  
-          // Add the new batch to the local array
-          this.batches.push(newBatch);
-          this.batchForm.reset(); // Clear the form
+      this.batchService.addBatch(this.batchForm.value).subscribe(
+        (response: Batch) => {
+          this.batches.push(response);
+          this.batchForm.reset();
+          this.closeModal();
         },
-        error: (err) => {
-          console.error('Failed to add batch:', err);
-  
-          // Set the error message if the batch already exists
-          if (err.status === 409) { // Assuming 409 Conflict for duplicate
-            this.errorMessage = 'Batch already exists!';
-          } else {
-            this.errorMessage = 'Failed to add batch. Please try again.';
-          }
-        },
-      });
+        (error: Error) => {
+          this.errorMessage = 'Failed to add batch';
+        }
+      );
     }
   }
-  
 
-  // Delete a batch dynamically
-  deleteBatch(id: number): void {
-    // Optimistically remove the batch from the frontend
-    const index = this.batches.findIndex((batch) => batch.id === id);
-    if (index > -1) {
-      this.batches.splice(index, 1); // Remove the batch from the local array
-    }
-
-    // Call the backend to delete the batch
-    this.batchService.deleteBatch(id).subscribe({
-      next: () => {
-        console.log(`Batch with id ${id} deleted successfully.`);
+  approveBatch(id: number): void {
+    this.batchService.approveBatch(id).subscribe(
+      () => {
+        // Update batch status or reload
+        this.loadBatches();
       },
-      error: (err) => {
-        console.error('Failed to delete batch:', err);
-
-        // Revert the deletion in the frontend if backend deletion fails
-        this.loadBatches(); // Optionally reload batches
-      },
-    });
+      (error: Error) => {
+        this.errorMessage = 'Failed to approve batch';
+      }
+    );
   }
+
+  rejectBatch(id: number): void {
+    this.batchService.rejectBatch(id).subscribe(
+      () => {
+        // Update batch status or reload
+        this.loadBatches();
+      },
+      (error: Error) => {
+        this.errorMessage = 'Failed to reject batch';
+      }
+    );
+  }
 }

@@ -1,1 +1,88 @@
-<p>group works!</p>
+<div class="container mt-5">
+    <!-- Table Header with Add Button -->
+    <div class="d-flex justify-content-between mb-3">
+        <h3>Group Management</h3>
+        <button class="btn btn-primary" (click)="openModal()">Add Group</button>
+    </div>
+
+    <!-- Groups Table -->
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Group Name</th>
+                    <th>Course</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="groups.length === 0">
+                    <td colspan="3" class="text-center">No groups available</td>
+                </tr>
+                <tr *ngFor="let group of groups">
+                    <td>{{ group.name }}</td>
+                    <td>{{ group.courseName }}</td>
+                    <td>
+                        <button class="btn btn-success btn-sm me-2" (click)="approveGroup(group.id)">Edit</button>
+                        <button class="btn btn-danger btn-sm" (click)="rejectGroup(group.id)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal for Adding Group -->
+    <div class="modal" [ngClass]="{'d-block': isModalOpen, 'd-none': !isModalOpen}">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Group</h5>
+                    <button type="button" class="btn-close" (click)="closeModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="groupForm" (ngSubmit)="addGroup()">
+                        <div class="mb-3">
+                            <label for="groupName" class="form-label">Group Name</label>
+                            <input
+                                id="groupName"
+                                type="text"
+                                class="form-control"
+                                formControlName="name"
+                                placeholder="Enter Group Name"
+                            />
+                            <div *ngIf="groupForm.get('name')?.invalid && groupForm.get('name')?.touched" class="text-danger mt-2">
+                                Group name is required and must be at least 2 characters.
+                            </div>
+                        </div>
+
+                        <!-- Course Selection Dropdown -->
+                        <div class="mb-3">
+                            <label for="course" class="form-label">Select Course</label>
+                            <select id="course" class="form-control" formControlName="courseId">
+                                <option value="" disabled selected>Select a course</option>
+                                <option *ngFor="let course of courses" [value]="course.id">
+                                    {{ course.name }}
+                                </option>
+                            </select>
+                            <div *ngIf="groupForm.get('courseId')?.invalid && groupForm.get('courseId')?.touched" class="text-danger mt-2">
+                                Please select a course.
+                            </div>
+                        </div>
+
+                        <!-- Error Message -->
+                        <div *ngIf="errorMessage" class="alert alert-danger mt-2">
+                            {{ errorMessage }}
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+                    <button type="button" class="btn btn-primary" [disabled]="groupForm.invalid" (click)="addGroup()">Add Group</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Backdrop -->
+    <div class="modal-backdrop fade show" *ngIf="isModalOpen"></div>
+</div>
