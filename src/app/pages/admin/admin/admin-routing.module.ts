@@ -8,6 +8,7 @@ import { CourseComponent } from '../../../components/admin/course/course.compone
 import { StudentVerifyComponent } from '../../../components/admin/student-verify/student-verify.component';
 import { StaffManagementComponent } from '../../../components/admin/staff-management/staff-management.component';
 import { LecturerManagementComponent } from '../../../components/admin/lecturer-management/lecturer-management.component';
+import { StudentManagementComponent } from '../../../components/admin/student-management/student-management.component';
 
 const routes: Routes = [
   {
@@ -42,7 +43,11 @@ const routes: Routes = [
     },
     {
       path:'lecturer-management',
-      component:LecturerManagementComponent
+      component:LecturerManagementComponent,
+    },
+    {
+      path:'student-management',
+      component:StudentManagementComponent,
     }
   ]
   }

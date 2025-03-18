@@ -1,0 +1,66 @@
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>STUDENT'S LIST</h2>
+      <button type="button" class="btn btn-primary" [routerLink]="['/staff/student-register']" *ngIf="userRole === 'staff'">+ Add Student</button>
+    </div>
+
+    <div class="mb-3">
+      <label for="classSelect" class="form-label">Filter by Class</label>
+      <select id="class-select" (change)="onClassChange()" [(ngModel)]="selectedClassId" class="form-control">
+        <option value="">Select the class</option>
+        <option *ngFor="let class of classes" [value]="class.id">
+          {{ class.className }}
+        </option>
+      </select>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover table-striped align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Index Number</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Enrollment Date</th>
+            <th>Class Name</th>
+            <th>NIC</th>
+            <th>UT Number</th>
+            <th>Gender</th>
+            <th>Admin Verified</th>
+            <th>Address</th>
+            <th *ngIf="userRole === 'staff'">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let student of filteredStudents">
+            <td>{{ student.indexNumber }}</td>
+            <td>{{ student.firstName }} {{ student.lastName }}</td>
+            <td>{{ student.email }}</td>
+            <td>{{ student.phoneNumber }}</td>
+            <td>{{ student.createdDate | date:'yyyy-MM-dd' }}</td>
+            <td>{{ student.class?.className || 'N/A' }}</td>
+            <td>{{ student.nic }}</td>
+            <td>{{ student.utNumber }}</td>
+            <td>{{ student.gender === '1' ? 'Male' : 'Female' }}</td>
+            <td>
+              <span class="badge" [ngClass]="{'bg-success': student.adminVerify, 'bg-danger': !student.adminVerify}">
+                {{ student.adminVerify ? 'Yes' : 'No' }}
+              </span>
+            </td>
+            <td>{{ student.address }}</td>
+            <td *ngIf="userRole === 'staff'">
+              <div class="d-flex justify-content-evenly">
+                <button class="btn btn-danger" (click)="DeleteStudent(student.id)">
+                  <i class="bi bi-person-x-fill"></i>
+                </button>
+                <button class="btn btn-warning" (click)="EditStudent(student.id)">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</div>

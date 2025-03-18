@@ -1,16 +1,21 @@
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterOutlet, RouterLink, Router } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterOutlet, RouterLink, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-admin-layout',
-  imports: [RouterOutlet,CommonModule,ReactiveFormsModule,RouterLink],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, HttpClientModule],
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.css'
 })
-export class AdminLayoutComponent {
+export class AdminLayoutComponent  {
+toggleCollapse() {
+throw new Error('Method not implemented.');
+}
   isOpen = true;
+imageUrl: any;
 
   toggleSidebar() {
     this.isOpen = !this.isOpen;
