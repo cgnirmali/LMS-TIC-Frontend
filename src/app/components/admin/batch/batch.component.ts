@@ -6,7 +6,7 @@ import { BatchService, Batch } from '../../../services/batch.service';
 
 @Component({
   selector: 'app-batch',
-  imports: [RouterLink,CommonModule,ReactiveFormsModule],
+  imports: [CommonModule,ReactiveFormsModule],
   templateUrl: './batch.component.html',
   styleUrl: './batch.component.css'
 })
