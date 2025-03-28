@@ -1,8 +1,11 @@
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h2>STUDENT'S LIST</h2>
-      <button type="button" class="btn btn-primary" [routerLink]="['/staff/student-register']" *ngIf="userRole === 'staff'">+ Add Student</button>
-    </div>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+       
+        <i class='bx bx-user-plus'></i>
+        Add Student
+      </button>    </div>
 
     <div class="mb-3">
       <label for="classSelect" class="form-label">Filter by Class</label>
@@ -63,4 +66,91 @@
         </tbody>
       </table>
     </div>
+</div>
+
+
+<!-- Add Student Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog" style="max-width: 1000px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Student</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="model-body">
+        <div class="pic">
+          <img src="/landingpage/staff.jpg" alt="Student Image">
+        </div>
+
+        <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+          <!-- First Name -->
+          <div class="mb-3">
+            <input type="text" class="form-control" formControlName="firstName" placeholder="First Name" required>
+          </div>
+
+          <!-- Last Name -->
+          <div class="mb-3">
+            <input type="text" class="form-control" formControlName="lastName" placeholder="Last Name" required>
+          </div>
+
+          <!-- NIC -->
+          <div class="mb-3">
+            <input type="text" class="form-control" formControlName="nic" placeholder="NIC" required>
+          </div>
+
+          <!-- Phone Number -->
+          <div class="mb-3">
+            <input type="text" class="form-control" formControlName="phoneNumber" placeholder="Phone Number" required>
+          </div>
+
+          <!-- UT Number -->
+          <div class="mb-3">
+            <input type="text" class="form-control" formControlName="utNumber" placeholder="UT Number" required>
+          </div>
+
+          <!-- Gender -->
+          <div class="mb-3">
+            <select class="form-control" formControlName="gender" required>
+              <option value="" disabled selected>Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+
+          <!-- Address -->
+          <div class="mb-3">
+            <input type="text" class="form-control" formControlName="address" placeholder="Address" required>
+          </div>
+
+          <!-- User Email -->
+          <div class="mb-3">
+            <input type="email" class="form-control" formControlName="userEmail" placeholder="User Email" required>
+          </div>
+
+          <!-- UT Email -->
+          <div class="mb-3">
+            <input type="email" class="form-control" formControlName="utEmail" placeholder="UT Email" required>
+          </div>
+
+          <!-- UT Password -->
+          <div class="mb-3">
+            <input type="password" class="form-control" formControlName="utPassword" placeholder="UT Password" required>
+          </div>
+
+          <!-- Status -->
+          <div class="mb-3">
+            <select class="form-control" formControlName="status" required>
+              <option value="0">Inactive</option>
+              <option value="1">Active</option>
+            </select>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-info w-100" [disabled]="registrationForm.invalid">
+            Register
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

@@ -123,3 +123,23 @@
       padding: 8px 10px; /* Adjust padding for mobile */
     }
   }
+  
+  
+  .pic{
+    width: 50%;
+    height: 100%;
+  }
+  img{
+    background-size: cover;
+  
+    width :100%;
+  }
+  
+  .modal-body{
+    display: flex; 
+    justify-content: space-evenly;
+  }
+  
+  .error-message{
+    color: #c82333;
+  }
