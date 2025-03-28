@@ -18,7 +18,7 @@ const routes: Routes = [
   children:[
    
     {
-      path:'Batches',
+      path:'batches',
       component:BatchComponent,
     },
     {
