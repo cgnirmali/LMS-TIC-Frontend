@@ -1,35 +1,42 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { Group, GroupApiResponse } from './models/models';
 
-export interface Group {
-  id: number;
-  name: string;
-  courseName: string; 
-  courseId: number; 
-}
 
 @Injectable({
   providedIn: 'root'
 })
 export class GroupService {
-  private apiUrl = 'https://localhost:7265/api/Group'; 
+  private apiUrl = 'https://localhost:7265/api/Group';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getGroups(): Observable<Group[]> {
-    return this.http.get<Group[]>(this.apiUrl);
+    return this.http.get<GroupApiResponse>(this.apiUrl).pipe(
+      map(response => response.$values), // Only extract the $values array
+      catchError(error => {
+        console.error('Error fetching groups', error);
+        return throwError(() => new Error('Error fetching groups'));
+      })
+    );
   }
 
-  addGroup(group: { name: string }): Observable<Group> {
-    return this.http.post<Group>(this.apiUrl, group);
+  addGroup(group: { name: string; courseId: string }): Observable<Group> {
+    return this.http.post<Group>(this.apiUrl, group).pipe(
+      catchError(error => {
+        console.error('Error adding group', error);
+        return throwError(() => new Error('Error adding group'));
+      })
+    );
   }
 
-  approveGroup(id: number): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, {});
-  }
-
-  rejectGroup(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`, {});
+  deleteGroup(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+      catchError(error => {
+        console.error('Error deleting group', error);
+        return throwError(() => new Error('Error deleting group'));
+      })
+    );
   }
 }
