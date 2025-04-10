@@ -1,34 +1,33 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { Batch, BatchApiResponse } from './models/models';
 
-export interface Batch {
-  id: number;
-  name: string;
-  // Add other properties as needed
-}
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class BatchService {
-  private apiUrl = 'https://localhost:7265/api/Batch'; // Replace with your actual API endpoint
+  private apiUrl = 'https://localhost:7265/api/Batch'; // Update your API URL if needed
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getBatches(): Observable<Batch[]> {
-    return this.http.get<Batch[]>(this.apiUrl);
-  }
-
-  addBatch(batch: { name: string }): Observable<Batch> {
+  addBatch(batch: Partial<Batch>): Observable<Batch> {
     return this.http.post<Batch>(this.apiUrl, batch);
   }
 
-  approveBatch(id: number): Observable<any> {
+  getAllBatches(): Observable<Batch[]> {
+    return this.http.get<BatchApiResponse>(this.apiUrl).pipe(
+      map(response => response.$values) // Extract the array from the response
+    );
+  }
+
+  approveBatch(id: string): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/${id}`, {});
   }
 
-  rejectBatch(id: number): Observable<any> {
+  rejectBatch(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`, {});
-    }
-  }
+  }
+}

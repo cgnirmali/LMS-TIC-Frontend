@@ -9,6 +9,8 @@ import { StudentVerifyComponent } from '../../../components/admin/student-verify
 import { StaffManagementComponent } from '../../../components/admin/staff-management/staff-management.component';
 import { LecturerManagementComponent } from '../../../components/admin/lecturer-management/lecturer-management.component';
 import { StudentManagementComponent } from '../../../components/admin/student-management/student-management.component';
+import { BatchCourseComponent } from '../../../components/admin/batch-course/batch-course.component';
+import { GroupSubjectComponent } from '../../../components/admin/group-subject/group-subject.component';
 
 const routes: Routes = [
   {
@@ -16,10 +18,14 @@ const routes: Routes = [
   component:AdminLayoutComponent ,
   
   children:[
-   
+    
     {
-      path:'batches',
-      component:BatchComponent,
+      path:'manage-batch&course',
+      component:BatchCourseComponent,
+    },
+    {
+      path:'manage-group&subject',
+      component:GroupSubjectComponent,
     },
     {
       path:'courses',
