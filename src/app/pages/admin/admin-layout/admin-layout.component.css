@@ -11,12 +11,28 @@
   position: fixed;
   left: 0;
   top: 0;
-  height: 100%;
+  height: 100vh; /* Full viewport height */
+  overflow-y: auto; /* <-- Important: Scroll vertically if needed */
+  overflow-x: hidden;
   width: 78px;
   background: #11101d;
   padding: 6px 14px;
   z-index: 99;
   transition: all 0.5s ease;
+
+}
+/* Optional: make the scrollbar look nice */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .sidebar.open {
@@ -314,4 +330,34 @@
   font-size: 1.5rem;
   color: hsl(227, 92%, 90%);
   cursor: pointer;
+}
+
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.nav-link:hover {
+  background: #1d1b31;
+}
+
+.submenu {
+  padding-left: 50px; /* indent submenu a little */
+  list-style: none;
+}
+
+.submenu li a {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  color: #ccc;
+  font-size: 14px;
+}
+
+.submenu li a:hover {
+  color: #fff;
 }

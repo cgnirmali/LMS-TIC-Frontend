@@ -20,6 +20,12 @@ imageUrl: any;
   toggleSidebar() {
     this.isOpen = !this.isOpen;
   }
+  classDropdownOpen = false;
+
+toggleClassStructure() {
+  this.classDropdownOpen = !this.classDropdownOpen;
+}
+
 
   constructor
   (
