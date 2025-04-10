@@ -58,3 +58,29 @@ export interface User {
     batch: Batch;
   }
   
+
+  export interface GroupApiResponse {
+    $id: string;
+    $values: Group[];
+  }
+
+  export interface Group {
+    id: string;
+    createdDate: string;
+    name: string;
+    courseId: string;
+  }
+  
+
+  export interface SubjectListResponse {
+    $id: string;
+    $values: Subject[];
+  } 
+export interface Subject {
+  id: string;
+  createdDate: string;
+  name: string;
+  description: string;
+  courseId: string;
+}
+
