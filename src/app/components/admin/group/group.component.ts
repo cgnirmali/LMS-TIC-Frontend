@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { GroupService, Group } from '../../../services/group.service';
-import { Course, CourseService } from '../../../services/course.service';
+import {  CourseService } from '../../../services/course.service';
 
 @Component({
   selector: 'app-group',
@@ -14,7 +14,7 @@ import { Course, CourseService } from '../../../services/course.service';
 export class GroupComponent implements OnInit {
   groupForm: FormGroup;
   groups: Group[] = [];
-  courses: Course[] = []; 
+  courses: any[] = []; 
   errorMessage: string = '';
   isModalOpen: boolean = false;
 
@@ -47,14 +47,14 @@ export class GroupComponent implements OnInit {
 
   // Load courses from the backend
   loadCourses(): void {
-    this.courseService.getCourses().subscribe(
-      (data: Course[]) => {
-        this.courses = data;
-      },
-      (error: any) => {
-        this.errorMessage = 'Failed to load courses';
-      }
-    );
+    // this.courseService.getCourses().subscribe(
+    //   (data: Course[]) => {
+    //     this.courses = data;
+    //   },
+    //   (error: any) => {
+    //     this.errorMessage = 'Failed to load courses';
+    //   }
+    // );
   }
 
   openModal(): void {

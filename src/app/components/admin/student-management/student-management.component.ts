@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { StudentService } from '../../../services/student.service';
 
 @Component({
   selector: 'app-student-management',
@@ -12,14 +13,15 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   styleUrl: './student-management.component.css'
 })
 export class StudentManagementComponent  implements OnInit {
+
   selectedClassId: string = '';
-  userRole: string = 'staff'; // Example role
   classes: any[] = [];  // Add actual class data
-  filteredStudents: any[] = [];
-  staffs: any[] = [];
+  filteredStudents: any[] = [];  // Array of students
+  selectedStudent: any | null = null;  // Variable to hold the selected student details
+
   registrationForm!: FormGroup; // FormGroup for Add/Edit student form
 
-  constructor(private http: HttpClient, private fb: FormBuilder) {}
+  constructor(private studentService: StudentService, private fb: FormBuilder) {}
 
   ngOnInit() {
     this.getAllStudents();
@@ -29,6 +31,7 @@ export class StudentManagementComponent  implements OnInit {
   // Initialize the student registration form
   initializeForm() {
     this.registrationForm = this.fb.group({
+      id: [''], // Add an id field for edit
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       nic: ['', Validators.required],
@@ -43,31 +46,86 @@ export class StudentManagementComponent  implements OnInit {
     });
   }
 
-  // Get all students
+  // Get all students from the API
   getAllStudents() {
-    this.http.get<any[]>('https://localhost:7265/api/Student/Get-All-Students')
-      .subscribe(response => {
-        this.filteredStudents = response.map(student => ({
-          id: student.id,
-          firstName: student.firstName,
-          lastName: student.lastName,
-          email: student.email,
-          phoneNumber: student.phoneNumber,
-          createdDate: student.createdDate,
-          class: student.class || { className: 'N/A' },
-          nic: student.nic,
-          utNumber: student.utNumber,
-          gender: student.gender,
-          adminVerify: student.adminVerify,
-          address: student.address
-        }));
-      });
+    this.studentService.getStudents().subscribe((students) => {
+      this.filteredStudents = students;
+    });
   }
 
-  // Handle class change for filtering students
+  viewStudentDetails(student: any) {
+    this.selectedStudent = student;
+    // Use bootstrap globally without importing explicitly
+    const modal = new (window as any).bootstrap.Modal(document.getElementById('studentDetailsModal')!);
+    modal.show();
+  }
+
+  openAddStudentModal() {
+    // Ensure Bootstrap's modal function is available
+    const modalElement = document.getElementById('staticBackdrop');
+    if (modalElement) {
+      const modal = new (window as any).bootstrap.Modal(modalElement);
+      modal.show();
+    } else {
+      console.error('Modal element not found');
+    }
+  }
+
+  // Method to handle edit student action
+  EditStudent(studentId: string) {
+    // Find the student by id
+    const studentToEdit = this.filteredStudents.find(student => student.id === studentId);
+    if (studentToEdit) {
+      // Populate the form with the student data
+      this.registrationForm.patchValue({
+        id: studentToEdit.id,
+        firstName: studentToEdit.firstName,
+        lastName: studentToEdit.lastName,
+        nic: studentToEdit.nic,
+        phoneNumber: studentToEdit.phoneNumber,
+        utNumber: studentToEdit.utNumber,
+        gender: studentToEdit.gender,
+        address: studentToEdit.address,
+        userEmail: studentToEdit.userEmail,
+        utEmail: studentToEdit.utEmail || '', // Use an empty string if utEmail is undefined
+        utPassword: '', // Leave the password empty or handle as needed
+        status: studentToEdit.status
+      });
+  
+      // Open the modal to edit the student
+      this.openAddStudentModal();
+    }
+  }
+  
+
+  // Handle submit for Add/Edit student
+  onSubmit() {
+    if (this.registrationForm.valid) {
+      const studentPayload = this.registrationForm.value;
+      if (studentPayload.id) {
+        // Update existing student
+        this.studentService.updateStudent(studentPayload.id, studentPayload)
+          .subscribe(() => {
+            this.getAllStudents(); // Refresh student list after update
+            this.registrationForm.reset();
+          });
+      } else {
+        // Add new student
+        this.studentService.addStudent(studentPayload)
+          .subscribe(() => {
+            this.getAllStudents(); // Refresh student list after add
+            this.registrationForm.reset();
+          });
+      }
+    }
+  }
+
+  // Filter students by class
   onClassChange() {
     if (this.selectedClassId) {
-      this.filteredStudents = this.filteredStudents.filter(student => student.class.id === this.selectedClassId);
+      this.filteredStudents = this.filteredStudents.filter(student => {
+        return student.class === this.selectedClassId;
+      });
     } else {
       this.getAllStudents(); // Reset to all students if no class selected
     }
@@ -76,54 +134,7 @@ export class StudentManagementComponent  implements OnInit {
   // Handle delete student action
   DeleteStudent(studentId: string) {
     if (confirm("Are you sure you want to delete this student?")) {
-      this.http.delete(`https://localhost:7265/api/Student/Delete-Student/${studentId}`)
-        .subscribe(() => {
-          this.getAllStudents(); // Refresh student list after deletion
-        });
-    }
-  }
-
-  // Handle edit student action
-  EditStudent(studentId: string) {
-    // Retrieve the student's details from the API (or mock data)
-    this.http.get<any>(`https://localhost:7265/api/Student/Get-Student/${studentId}`)
-      .subscribe(student => {
-        // Fill the form with the student's details
-        this.registrationForm.patchValue({
-          firstName: student.firstName,
-          lastName: student.lastName,
-          nic: student.nic,
-          phoneNumber: student.phoneNumber,
-          utNumber: student.utNumber,
-          gender: student.gender,
-          address: student.address,
-          userEmail: student.email,
-          utEmail: student.utEmail,
-          utPassword: '',  // Do not pre-fill password for security
-          status: student.status
-        });
-      });
-  }
-
-  // Handle submit for Add/Edit student
-  onSubmit() {
-    if (this.registrationForm.valid) {
-      const studentPayload = this.registrationForm.value;
-      if (studentPayload.id) {
-        // Update existing student
-        this.http.put(`https://localhost:7265/api/Student/Update-Student/${studentPayload.id}`, studentPayload)
-          .subscribe(() => {
-            this.getAllStudents(); // Refresh student list after update
-            this.registrationForm.reset();
-          });
-      } else {
-        // Add new student
-        this.http.post('https://localhost:7265/api/Student/Add-Student', studentPayload)
-          .subscribe(() => {
-            this.getAllStudents(); // Refresh student list after add
-            this.registrationForm.reset();
-          });
-      }
+      // Implement delete logic here (similar to how you fetch the students)
     }
   }
 }

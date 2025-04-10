@@ -49,12 +49,26 @@
       <span class="tooltip">Timetable List</span>
     </li>
     <li>
-      <a href="#" [routerLink]="['/admin/class-management']">
+      <div class="nav-link" (click)="toggleClassStructure()">
         <i class='bx bx-sitemap'></i>
-        <span class="links_name">class structure</span>
-      </a>
-      <span class="tooltip">class structure</span>
+        <span class="links_name">Class Structure</span>
+        <i class='bx' [ngClass]="classDropdownOpen ? 'bx-chevron-up' : 'bx-chevron-down'" style="margin-left:auto;"></i>
+      </div>
+    
+      <ul *ngIf="classDropdownOpen" class="submenu">
+        <li>
+          <a [routerLink]="['/admin/manage-batch&course']">
+            <span class="links_name">Batch</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/admin/manage-group&subject']">
+            <span class="links_name">Group</span>
+          </a>
+        </li>
+      </ul>
     </li>
+    
     <li>
       <a href="#" [routerLink]="['/admin/viewFeedback']">
         <i class='bx bx-message-dots'></i>
@@ -74,23 +88,6 @@
 </div>
 
 <section class="home-section" [class.open]="isOpen">
-  <header class="header" id="header">
-    <div class="header__container">
-      <button class="header__toggle" id="header-toggle" (click)="toggleCollapse()">
-        <i class="ri-menu-line"></i>
-      </button>
-      <div class="nav-icons">
-        <button class="header__notification" id="header-toggle" (click)="toggleCollapse()">
-          <span class="notification-indicator">1</span>
-          <i class="bi bi-bell-fill"></i>
-        </button>
-        <div class="sidebar__img">
-          <img [src]="imageUrl" alt="Profile Image" id="profileImage">
-          <span class="status-indicator"></span>
-        </div>
-      </div>
-    </div>
-  </header>
   <div class="text">
     <router-outlet></router-outlet>
   </div>
