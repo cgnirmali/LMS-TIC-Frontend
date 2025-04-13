@@ -21,6 +21,19 @@ export interface Student {
 }
 
 
+export interface Staff {
+  id: number;
+  name: string;
+  userEmail : string;
+  phoneNumber: string;
+  gender?: string;
+  address?: string;
+  nic?: string;
+  password?: string;
+  utEmail:string
+}
+
+
 export interface User {
     id: string;
     createdDate: string;
