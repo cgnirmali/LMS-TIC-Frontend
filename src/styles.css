@@ -1,1 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Font Size */
+html {
+    font-size: 12px !important;  /* Base font size for all screen sizes */
+  }
+  
+  body {
+    font-size: 1rem !important; /* 16px */
+    margin: 0;
+    padding: 0;
+  }
+  
+  h1, h2, h3, h4, h5, h6, p, li, a {
+    font-size: 15px !important;  /* Ensure that all text elements use this font size */
+  }
+  
+  @media (max-width: 768px) {
+    html {
+      font-size: 13px !important; /* Decrease base font size for mobile */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    html {
+      font-size: 10px !important; /* Further decrease font size for smaller screens */
+    }
+  }
+  

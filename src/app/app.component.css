@@ -1,0 +1,21 @@
+/* Force Global Font Size */
+:host {
+    font-size: 1rem !important; /* Ensure the root component uses the specified font size */
+  }
+  
+  h1, h2, h3, h4, h5, h6, p, li, a {
+    font-size: 1rem !important;  /* Ensure that all text elements use this font size */
+  }
+  
+  @media (max-width: 768px) {
+    :host {
+      font-size: 14px !important; /* Decrease font size for smaller devices */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    :host {
+      font-size: 12px !important; /* Further decrease font size for mobile screens */
+    }
+  }
+  
