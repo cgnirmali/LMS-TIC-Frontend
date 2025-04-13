@@ -185,3 +185,33 @@
     width: 100%;
   }
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* viewmodal */
+
+  .modal-content {
+    border: none;
+  }
+  
+  .modal-header {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  .modal-body p {
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+  }
+  

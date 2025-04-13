@@ -1,23 +1,33 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Staff } from './models/models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StaffService {
-  private staffUrl ='https://localhost:7265/api/Staff/Add_Staff';
-  private GetAllUrl = 'https://localhost:7265/api/Staff/Get_All_Staff';
+  private apiUrl = 'https://localhost:7265/api/Staff'; // Change to your real API endpoint
+
   constructor(private http: HttpClient) {}
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
+
+  getAllStaffs(): Observable<Staff[]> {
+    return this.http.get<Staff[]>(`${this.apiUrl}/Get_All_Staff`);
   }
 
-      // Verify student by ID
-      verifyStudent(staffId: number): Observable<any> {
-        return this.http.post(`${this.staffUrl}?staffId=${staffId}`,{});
-      }
-  getAllStudents(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.GetAllUrl}`);
+  addStaff(staff: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Add_Staff`, staff);
+  }
+
+  deleteStaff(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  updateStaff(id: number, staff: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/Update_Staff/${id}`, staff);  // Fixed URL
+  }
+  
+  getStaffById(id: number): Observable<Staff> {
+    return this.http.get<Staff>(`${this.apiUrl}/${id}`);
   }
 }
