@@ -5,8 +5,28 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
+  
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden; /* 🔒 prevent global scroll */
 }
 
+section{
+ 
+ 
+  background-color: #f0efef;
+ 
+}
+
+.scetiondiv{
+  
+  padding: 0 20px;
+  height: 100vh;
+  overflow-y: auto;
+
+}
 .sidebar {
   position: fixed;
   left: 0;
@@ -206,12 +226,13 @@
 
 .home-section {
   position: relative;
-  background: #f0efef;
-  height: 100vh;
+  overflow-x: auto;
+
   left: 78px;
   width: calc(100% - 78px);
   transition: all 0.5s ease;
-  padding: 0 20px;
+ 
+
 }
 
 .sidebar.open ~ .home-section {

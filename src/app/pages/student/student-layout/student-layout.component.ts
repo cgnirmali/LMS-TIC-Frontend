@@ -4,40 +4,31 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-student-layout',
-  imports: [RouterOutlet,RouterLink,CommonModule],
+  imports: [RouterOutlet, RouterLink, CommonModule],
   templateUrl: './student-layout.component.html',
-  styleUrl: './student-layout.component.css'
+  styleUrl: './student-layout.component.css',
 })
 export class StudentLayoutComponent {
   isOpen = true;
   // studentid: any | string;
-  userId: string = '';  // User ID will be fetched from localStorage
-  date = ''
+  userId: string = ''; // User ID will be fetched from localStorage
+  date = '';
 
-
-
-
+  imageUrl: any;
 
   toggleSidebar() {
-    this.isOpen = !this.isOpen;  // Toggle sidebar visibility
+    this.isOpen = !this.isOpen; // Toggle sidebar visibility
   }
 
-  constructor
-    (
-   
-      private router:Router
-    ) {
+  constructor(private router: Router) {}
 
+  ngOnInit(): void {}
+
+  toggleCollapse() {
+    throw new Error('Method not implemented.');
   }
 
-  ngOnInit(): void {
-
- 
-  }
-
-  getStudentInfo(studentid: string) {
-    
-  }
+  getStudentInfo(studentid: string) {}
 
   logout() {
     // Clear local storage
@@ -47,8 +38,3 @@ export class StudentLayoutComponent {
     this.router.navigate(['/']);
   }
 }
-
-
-
-
-

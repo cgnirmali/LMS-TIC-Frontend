@@ -13,7 +13,7 @@
                 <div class="text-center">
                   <h2 class="step-title" *ngIf="step === 1">Enter Your Email</h2>
                   <h2 class="step-title" *ngIf="step === 2">Step 2: Enter OTP</h2>
-                  <h2 class="step-title" *ngIf="step === 3">Step 3: Registration</h2>
+                  <h2 class="step-title" *ngIf="step === 3">Step 3: Update Password</h2>
                 </div>
 
                 <div class="container2 d-flex flex-column justify-content-between">
@@ -41,91 +41,18 @@
 
                   <div *ngIf="step === 3">
                     <form [formGroup]="registrationForm" (ngSubmit)="register()">
-                      <!-- Email Input -->
-                      <div class="mb-3">
-                        <input type="email" class="form-control" formControlName="email" placeholder="Email" required>
-                        <div *ngIf="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched" class="error-message">
-                          Please enter a valid email
-                        </div>
-                      </div>
-
-                      <!-- Other form fields -->
-                      <div class="mb-3">
-                        <input type="text" class="form-control" formControlName="firstName" placeholder="First Name" required>
-                        <div *ngIf="registrationForm.get('firstName')?.invalid && registrationForm.get('firstName')?.touched" class="error-message">
-                          First Name is required and must be at least 3 characters
-                        </div>
-                      </div>
-
-                      <div class="mb-3">
-                        <input type="text" class="form-control" formControlName="lastName" placeholder="Last Name" required>
-                        <div *ngIf="registrationForm.get('lastName')?.invalid && registrationForm.get('lastName')?.touched" class="error-message">
-                          Last Name is required and must be at least 3 characters
-                        </div>
-                      </div>
-
-                      <div class="mb-3">
-                        <select id="gender" name="gender" class="form-control" formControlName="gender">
-                          <option value="" disabled selected>Select Gender</option>
-                          <option value="1">Male</option>
-                          <option value="2">Female</option>
-                        </select>
-                        <div *ngIf="registrationForm.get('gender')?.invalid && registrationForm.get('gender')?.touched" class="error-message">
-                          Please select a gender
-                        </div>
-                      </div>
-                      
-                      <div class="mb-3">
-                        <input type="text" class="form-control" formControlName="phoneNumber" placeholder="Phone Number" required>
-                        <div *ngIf="registrationForm.get('phoneNumber')?.invalid && registrationForm.get('phoneNumber')?.touched" class="error-message">
-                          Please enter a valid phone number
-                        </div>
-                      </div>
+          
                     
-                      <div class="mb-3">
-                        <input type="text" class="form-control" formControlName="nic" placeholder="NIC" required>
-                        <div *ngIf="registrationForm.get('nic')?.invalid && registrationForm.get('nic')?.touched" class="error-message">
-                          NIC is required and must be in a valid format
-                        </div>
-                      </div>
-
-                      <div class="mb-3">
-                        <input type="text" class="form-control" formControlName="utNumber" placeholder="UT Number" required>
-                        <div *ngIf="registrationForm.get('utNumber')?.invalid && registrationForm.get('utNumber')?.touched" class="error-message">
-                          UT Number is required
-                        </div>
-                      </div>
-                    
-                      <div class="mb-3">
-                        <input type="text" class="form-control" formControlName="imageUrl" placeholder="Image URL" required>
-                        <div *ngIf="registrationForm.get('imageUrl')?.invalid && registrationForm.get('imageUrl')?.touched" class="error-message">
-                          Image URL is required
-                        </div>
-                      </div>
-
-                      <div class="mb-3">
-                        <input type="password" class="form-control" formControlName="password" placeholder="Password" required>
-                        <div *ngIf="registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched" class="error-message">
-                          Password is required and must be at least 6 characters
-                        </div>
-                      </div>
-
-                      <div class="mb-3">
-                        <input type="password" class="form-control" formControlName="confirmPassword" placeholder="Confirm Password" required>
-                        <div *ngIf="registrationForm.get('confirmPassword')?.invalid && registrationForm.get('confirmPassword')?.touched" class="error-message">
-                          Please confirm the password
-                        </div>
-                      </div>
-                    
-                      <div class="mb-3">
-                        <input type="text" class="form-control" formControlName="address" placeholder="Address" required>
-                        <div *ngIf="registrationForm.get('address')?.invalid && registrationForm.get('address')?.touched" class="error-message">
-                          Address is required
-                        </div>
+                      <div class="form-outline mb-4">
+                        <label class="form-label" for="form2Example22"><i class="bi bi-key-fill"></i>New Password</label>
+                        <input type="password" id="form2Example22" class="form-control" placeholder="Enter New Password" formControlName="updatepassword" />
+                        <!-- <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger">
+                          Password must be at least 6 characters long.
+                        </div> -->
                       </div>
                     
                       <button type="submit" class="btn btn-info w-100" [disabled]="registrationForm.invalid">
-                        Register
+                        Update
                       </button>
                     </form>
                   </div>

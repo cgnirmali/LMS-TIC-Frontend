@@ -4,6 +4,7 @@ import { StudentDashboardComponent } from '../../../components/student/student-d
 import { StudentLayoutComponent } from '../student-layout/student-layout.component';
 import { SettingsComponent } from '../../../components/student/settings/settings.component';
 import { AssesmentSubmissionComponent } from '../../../components/student/assesment-submission/assesment-submission.component';
+import { StudentscheduleComponent } from '../../../components/student/Schedule/studentschedule/studentschedule.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,10 @@ const routes: Routes = [
     {
       path:'assesment-submission',
       component:AssesmentSubmissionComponent,
+    },
+    {
+      path:'studentschedule',
+      component:StudentscheduleComponent,
     } 
   ]
   }

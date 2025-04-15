@@ -1,0 +1,464 @@
+
+<!-- FILTERS SECTION (Top of table) -->
+<div class="filters-toolbar" style="display: flex">
+  <div class="filters-group">
+    <label for="year">Year:</label>
+    <select id="year" [(ngModel)]="selectedYear" (change)="onFilterChange()">
+      <option *ngFor="let year of yearList" [value]="year">{{ year }}</option>
+    </select>
+
+    <label for="month">Month:</label>
+    <select id="month" [(ngModel)]="selectedMonth" (change)="onFilterChange()">
+      <option *ngFor="let month of monthList" [value]="month.value">
+        {{ month.name }}
+      </option>
+    </select>
+
+    <button disabled>Filter</button>
+  </div>
+
+  
+<div class="view-toggle" >
+  <button (click)="toggleView()" class="viewchange">
+    {{ isWeeklyView ? "Back to Monthly View" : "Switch to Weekly View" }}
+  </button>
+</div>
+</div>
+
+
+<div *ngIf="!isWeeklyView">
+  <div class="table-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th *ngFor="let schedule of this.scheduleData" colspan="2">
+          {{ schedule.date | date : "yyyy-MM-dd" }}
+        </th>
+      </tr>
+      <tr>
+        <ng-container *ngFor="let schedule of scheduleData">
+          <th>Session</th>
+          <th>Lap</th>
+        </ng-container>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let row of [0, 1, 2, 3, 4, 5]; let rowIndex = index">
+        <ng-container *ngFor="let schedule of scheduleData">
+          <!--holiday   -->
+          <ng-container *ngIf="schedule.classSchedule === 2">
+            <ng-container *ngIf="rowIndex === 0">
+              <td class="holiday-cell" [attr.rowspan]="6" colspan="2">
+                <div>
+                  <span class="small-holiday-number">#{{ rowIndex + 1 }}</span
+                  ><br />
+                  {{ schedule.holidayDetail?.holidayName }}
+                  <div
+                    class="edit-icon"
+                    (click)="
+                      onEditHoliday(schedule.holidayDetail?.holidayId , schedule.date)
+                    "
+                  >
+                    ✏️ Edit
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+          </ng-container>
+
+          <!-- No Add  -->
+          <ng-container *ngIf="schedule.classSchedule == 0">
+            <td>
+              <span class="box-number">#{{ rowIndex * 2 + 1 }}</span
+              ><br />
+              <div
+                class="edit-icon"
+                (click)="onCreate(schedule.scheduleId, schedule.date)"
+              >
+                ✏️ Edit
+              </div>
+            </td>
+            <td>
+              <span class="box-number">#{{ rowIndex * 2 + 2 }}</span
+              ><br />
+              <div
+                class="edit-icon"
+                (click)="onCreate(schedule.scheduleId, schedule.date)"
+              >
+                ✏️ Edit
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- CLASS  -->
+          <ng-container *ngIf="schedule.classSchedule === 1">
+            <!-- SESSION  -->
+            <td>
+              <span class="box-number">#{{ rowIndex * 2 + 1 }}</span
+              ><br />
+
+              <ng-container
+                *ngIf="getScheduleByClassType(schedule, 1)[rowIndex] as session"
+              >
+                <div>
+                  {{ session.startTime }} - {{ session.endTime }}
+                  {{ session.description }}<br />
+                  cell :{{ session.cellNumber }} <br />
+                  (Group {{ session.name }})
+                  <div
+                    class="edit-icon"
+                    (click)="
+                      onEditSchedule(session.scheduleDetailsId, schedule.date)
+                    "
+                  >
+                    ✏️ Edit
+                  </div>
+                </div>
+              </ng-container>
+
+              <ng-container
+                *ngIf="
+                  !getScheduleByClassType(schedule, 1)[rowIndex] as session
+                "
+              >
+                <div
+                  class="edit-icon"
+                  (click)="onCreate(schedule.scheduleId, schedule.date)"
+                >
+                  ✏️ Edit
+                </div>
+              </ng-container>
+            </td>
+
+            <!-- LAP  -->
+            <td>
+              <span class="box-number">#{{ rowIndex * 2 + 2 }}</span
+              ><br />
+
+              <ng-container
+                *ngIf="getScheduleByClassType(schedule, 0)[rowIndex] as lap"
+              >
+                <div>
+                  {{ lap.startTime }} - {{ lap.endTime }}<br />
+                  {{ lap.description }}  <br> (Group {{ lap.name }})
+                  <br />
+                  cell :{{ lap.cellNumber }} <br />
+                </div>
+                <div
+                  class="edit-icon"
+                  (click)="onEditSchedule(lap.scheduleDetailsId, schedule.date)"
+                >
+                  ✏️ Edit
+                </div>
+              </ng-container>
+
+              <ng-container
+                *ngIf="!getScheduleByClassType(schedule, 0)[rowIndex] as lap"
+              >
+                <div
+                  class="edit-icon"
+                  (click)="onCreate(schedule.scheduleId, schedule.date)"
+                >
+                  ✏️ Edit
+                </div>
+              </ng-container>
+            </td>
+          </ng-container>
+        </ng-container>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+
+
+<!-- Centered Create Button if error -->
+<div *ngIf="showCreateButton" class="create-button-container">
+  <button (click)="createScheduleTable()">Create Schedule Table</button>
+</div>
+
+<!-- Modal -->
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <h3>Schedule Setup - {{ selectedDate | date : "yyyy-MM-dd" }}</h3>
+    <p>Schedule ID: {{ selectedScheduleId }}</p>
+
+    <label>Type:</label>
+    <select [(ngModel)]="scheduleType">
+      <option value="holiday">Holiday</option>
+      <option value="class">Class</option>
+    </select>
+
+    <div *ngIf="scheduleType === 'holiday'">
+      <label>Holiday Name:</label>
+      <input type="text" [(ngModel)]="holidayName" />
+    </div>
+
+    <div *ngIf="scheduleType === 'class'">
+      <label>Type of Class:</label>
+      <select [ngModel]="typeOfClassValue" (ngModelChange)="onTypeChange($event)">
+        <option [value]="TypeOfClass.Lap">Lap</option>
+        <option [value]="TypeOfClass.Session">Session</option>
+      </select>
+
+      <label>Group Name:</label>
+      <select [(ngModel)]="selectedGroupId">
+        <option *ngFor="let group of groups" [value]="group.id">
+          {{ group.name }}
+        </option>
+      </select>
+
+      <label>Description:</label>
+      <input type="text" [(ngModel)]="description" />
+
+      <div class="time-container">
+        <div>
+          <label>Start Time:</label>
+          <input type="time" [(ngModel)]="startTime" />
+        </div>
+        <div>
+          <label>End Time:</label>
+          <input type="time" [(ngModel)]="endTime" />
+        </div>
+      </div>
+
+      <label>Cell Number:</label>
+      <input type="number" [(ngModel)]="cellNumber" />
+    </div>
+
+    <div class="modal-footer">
+      <button (click)="saveSchedule()" class="save-btn">Save</button>
+      <button  class="sheduleclose-btn" (click)="oncloseSchedule()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="isWeeklyView" id="weeklySchedule">
+
+
+  <div class="week-navigation" style="margin-bottom: 10px; display: flex; justify-content: center;">
+    <button (click)="previousWeek()" [disabled]="currentWeekIndex === 0">
+      ⬅️ Previous
+    </button>
+    <button
+      (click)="nextWeek()"
+      [disabled]="(currentWeekIndex + 1) * 7 >= scheduleData.length"
+    >
+      Next ➡️
+    </button>
+  </div>
+
+  <div style="margin-top: 20px">
+    <button (click)="downloadElementAsPDF()">
+      Download Weekly View as PDF
+    </button>
+  </div>
+  <!-- TABLE SECTION -->
+  <table>
+    <thead>
+      <tr>
+        <th *ngFor="let schedule of weeklySchedule" colspan="2">
+          {{ schedule.date | date : "yyyy-MM-dd" }}
+        </th>
+      </tr>
+      <tr>
+        <ng-container *ngFor="let schedule of weeklySchedule">
+          <th>Session</th>
+          <th>Lap</th>
+        </ng-container>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let row of [0, 1, 2, 3, 4, 5]; let rowIndex = index">
+        <ng-container *ngFor="let schedule of weeklySchedule">
+          <!--holiday   -->
+          <ng-container *ngIf="schedule.classSchedule === 2">
+            <ng-container *ngIf="rowIndex === 0">
+              <td class="holiday-cell" [attr.rowspan]="6" colspan="2">
+                <div>
+                  <span class="small-holiday-number">#{{ rowIndex + 1 }}</span
+                  ><br />
+                  {{ schedule.holidayDetail?.holidayName }}
+                  <div class="edit-icon">✏️ Edit</div>
+                </div>
+              </td>
+            </ng-container>
+          </ng-container>
+
+          <!-- No Add  -->
+          <ng-container *ngIf="schedule.classSchedule == 0">
+            <td>
+              <span class="box-number">#{{ rowIndex * 2 + 1 }}</span
+              ><br />
+              <div
+                class="edit-icon"
+                (click)="onCreate(schedule.scheduleId, schedule.date)"
+              >
+                ✏️ Edit
+              </div>
+            </td>
+            <td>
+              <span class="box-number">#{{ rowIndex * 2 + 2 }}</span
+              ><br />
+              <div
+                class="edit-icon"
+                (click)="onCreate(schedule.scheduleId, schedule.date)"
+              >
+                ✏️ Edit
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- CLASS  -->
+          <ng-container *ngIf="schedule.classSchedule === 1">
+            <!-- SESSION  -->
+            <td>
+              <span class="box-number">#{{ rowIndex * 2 + 1 }}</span
+              ><br />
+
+              <ng-container
+                *ngIf="getScheduleByClassType(schedule, 1)[rowIndex] as session"
+              >
+                <div>
+                  {{ session.startTime }} - {{ session.endTime }}
+                  {{ session.description }}<br />
+                  cell :{{ session.cellNumber }} <br />
+                  (Group {{ session.name }})
+                  <div
+                    class="edit-icon"
+                    (click)="
+                      onEditSchedule(session.scheduleDetailsId, schedule.date)
+                    "
+                  >
+                    ✏️ Edit
+                  </div>
+                </div>
+              </ng-container>
+
+              <ng-container
+                *ngIf="
+                  !getScheduleByClassType(schedule, 1)[rowIndex] as session
+                "
+              >
+                <div
+                  class="edit-icon"
+                  (click)="onCreate(schedule.scheduleId, schedule.date)"
+                >
+                  ✏️ Edit
+                </div>
+              </ng-container>
+            </td>
+
+            <!-- LAP  -->
+            <td>
+              <span class="box-number">#{{ rowIndex * 2 + 2 }}</span
+              ><br />
+
+              <ng-container
+                *ngIf="getScheduleByClassType(schedule, 0)[rowIndex] as lap"
+              >
+                <div>
+                  {{ lap.startTime }} - {{ lap.endTime }}<br />
+                  {{ lap.description }} (Group {{ lap.groupId }})
+                </div>
+                <div
+                  class="edit-icon"
+                  (click)="onEditSchedule(lap.scheduleDetailsId, schedule.date)"
+                >
+                  ✏️ Edit
+                </div>
+              </ng-container>
+
+              <ng-container
+                *ngIf="!getScheduleByClassType(schedule, 0)[rowIndex] as lap"
+              >
+                <div
+                  class="edit-icon"
+                  (click)="onCreate(schedule.scheduleId, schedule.date)"
+                >
+                  ✏️ Edit
+                </div>
+              </ng-container>
+            </td>
+          </ng-container>
+        </ng-container>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal2 -->
+<div class="modal2" *ngIf="showModal2">
+  <div class="modal-content">
+    <button class="close-btn" (click)="oncloseScheduleUpdate()">×</button>
+    <h3>Schedule Setup</h3>
+    <h6>{{ selectedDate | date : "yyyy-MM-dd" }}</h6>
+    <p>selectedScheduleId ID: {{ selectedScheduleDetailId }}</p>
+    <div>
+      <label>TypeOfClass:</label>
+      <select [ngModel]="typeOfClassValue" (ngModelChange)="onTypeChange($event)">
+        <option [value]="TypeOfClass.Lap">Lap</option>
+        <option [value]="TypeOfClass.Session">Session</option>
+      </select>
+
+      <label>Group Name:</label>
+      <select [(ngModel)]="selectedGroupId">
+        <option *ngFor="let group of groups" [value]="group.id">
+          {{ group.name }}
+        </option>
+      </select>
+
+      <label>Description:</label>
+      <input type="text" [(ngModel)]="description" />
+
+
+        <div class="time-container">
+        <div>
+          <label>Start Time:</label>
+          <input type="time" [(ngModel)]="startTime" />
+        </div>
+        <div>
+          <label>End Time:</label>
+          <input type="time" [(ngModel)]="endTime" />
+        </div>
+      </div>
+
+      <label>Cell Number:</label>
+      <input type="number" [(ngModel)]="cellNumber" />
+    </div>
+
+    
+    <div class="modal-footer">
+      <button (click)="updateSchedule()" class="updateschedule-btn">Update</button>
+      <button   (click)=" onDeleteScheduleDetail()"  class="deleteschedule-btn">Delete</button>
+  </div>
+
+  </div>
+</div>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal3" *ngIf="showModal3">
+
+  <div class="modal-content">
+    <button class="close-btn" (click)="oncloseHolidayUpdate()">×</button>
+    <h3>Schedule Setup</h3>
+    <h6>{{ selectedDate | date : "yyyy-MM-dd" }}</h6>
+    <p>selectedScheduleId ID: {{  this.selectedHolidayDetailId }}</p>
+    <div>
+      <label>Holiday Name:</label>
+      <input type="text" [(ngModel)]=" this.holidayName " />
+    </div>
+    <div class="modal-footer">
+    <button (click)="updateHoliday()" class="updateHoliday-btn">Update</button>
+    <button   (click)="onDeleteHoliday()" class="deleteHoliday-btn">Delete</button>
+  </div>
+  </div>
+</div>

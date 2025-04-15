@@ -42,7 +42,7 @@
       <span class="tooltip">Attendance Overview</span>
     </li>
     <li>
-      <a href="#" [routerLink]="['/admin/viewTimetable']">
+      <a href="#" [routerLink]="['/admin/schedule']">
         <i class='bx bx-calendar'></i>
         <span class="links_name">Timetable List</span>
       </a>
@@ -74,6 +74,7 @@
 </div>
 
 <section class="home-section" [class.open]="isOpen">
+  <div class="scetiondiv">
   <header class="header" id="header">
     <div class="header__container">
       <button class="header__toggle" id="header-toggle" (click)="toggleCollapse()">
@@ -94,4 +95,6 @@
   <div class="text">
     <router-outlet></router-outlet>
   </div>
+  
+</div>
 </section>

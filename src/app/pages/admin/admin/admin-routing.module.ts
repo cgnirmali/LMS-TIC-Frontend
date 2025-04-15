@@ -9,6 +9,7 @@ import { StudentVerifyComponent } from '../../../components/admin/student-verify
 import { StaffManagementComponent } from '../../../components/admin/staff-management/staff-management.component';
 import { LecturerManagementComponent } from '../../../components/admin/lecturer-management/lecturer-management.component';
 import { StudentManagementComponent } from '../../../components/admin/student-management/student-management.component';
+import { ScheduleComponent } from '../../../components/admin/schedule/schedule.component';
 
 const routes: Routes = [
   {
@@ -48,6 +49,10 @@ const routes: Routes = [
     {
       path:'student-management',
       component:StudentManagementComponent,
+    },
+    {
+      path:'schedule',
+      component:ScheduleComponent,
     }
   ]
   }

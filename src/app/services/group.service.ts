@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 
 export interface Group {
   id: number;
@@ -16,9 +16,10 @@ export class GroupService {
   private apiUrl = 'https://localhost:7265/api/Group'; 
 
   constructor(private http: HttpClient) { }
-
   getGroups(): Observable<Group[]> {
-    return this.http.get<Group[]>(this.apiUrl);
+    return this.http.get<any>(this.apiUrl).pipe(
+      map((response: { $values: any; }) => response.$values)
+    );
   }
 
   addGroup(group: { name: string }): Observable<Group> {
@@ -33,3 +34,5 @@ export class GroupService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`, {});
   }
 }
+
+

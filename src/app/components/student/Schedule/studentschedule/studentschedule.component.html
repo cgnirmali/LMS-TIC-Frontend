@@ -1,0 +1,298 @@
+
+<!-- FILTERS SECTION (Top of table) -->
+<div class="filters-toolbar" style="display: flex">
+    <div class="filters-group">
+      <label for="year">Year:</label>
+      <select id="year" [(ngModel)]="selectedYear" (change)="onFilterChange()">
+        <option *ngFor="let year of yearList" [value]="year">{{ year }}</option>
+      </select>
+  
+      <label for="month">Month:</label>
+      <select id="month" [(ngModel)]="selectedMonth" (change)="onFilterChange()">
+        <option *ngFor="let month of monthList" [value]="month.value">
+          {{ month.name }}
+        </option>
+      </select>
+  
+      <button disabled>Filter</button>
+    </div>
+  
+    
+  <div class="view-toggle" >
+    <button (click)="toggleView()" class="viewchange">
+      {{ isWeeklyView ? "Back to Monthly View" : "Switch to Weekly View" }}
+    </button>
+  </div>
+  </div>
+  
+  
+  <div *ngIf="!isWeeklyView">
+    <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th *ngFor="let schedule of this.scheduleData" colspan="2">
+            {{ schedule.date | date : "yyyy-MM-dd" }}
+          </th>
+        </tr>
+        <tr>
+          <ng-container *ngFor="let schedule of scheduleData">
+            <th>Session</th>
+            <th>Lap</th>
+          </ng-container>
+        </tr>
+      </thead>
+  
+      <tbody>
+        <tr *ngFor="let row of [0, 1, 2, 3, 4, 5]; let rowIndex = index">
+          <ng-container *ngFor="let schedule of scheduleData">
+            <!--holiday   -->
+            <ng-container *ngIf="schedule.classSchedule === 2">
+              <ng-container *ngIf="rowIndex === 0">
+                <td class="holiday-cell" [attr.rowspan]="6" colspan="2">
+                  <div>
+                    <span class="small-holiday-number">#{{ rowIndex + 1 }}</span
+                    ><br />
+                    {{ schedule.holidayDetail?.holidayName }}
+                    <div >
+                    <h6>-</h6>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+            </ng-container>
+  
+            <!-- No Add  -->
+            <ng-container *ngIf="schedule.classSchedule == 0">
+              <td>
+                <span class="box-number">#{{ rowIndex * 2 + 1 }}</span
+                ><br />
+                <div >
+                    <h6>-</h6>
+              </div>
+              </td>
+              <td>
+                <span class="box-number">#{{ rowIndex * 2 + 2 }}</span
+                ><br />
+                <div >
+                    <h6>-</h6>
+                    </div>
+              </td>
+            </ng-container>
+  
+            <!-- CLASS  -->
+            <ng-container *ngIf="schedule.classSchedule === 1">
+              <!-- SESSION  -->
+              <td>
+                <span class="box-number">#{{ rowIndex * 2 + 1 }}</span
+                ><br />
+  
+                <ng-container
+                  *ngIf="getScheduleByClassType(schedule, 1)[rowIndex] as session"
+                >
+                  <div>
+                    {{ session.startTime }} - {{ session.endTime }}
+                    {{ session.description }}<br />
+                    cell :{{ session.cellNumber }} <br />
+                    (Group {{ session.name }})
+                    <div >
+                        <h6>-</h6>
+                        </div>
+                  </div>
+                </ng-container>
+  
+                <ng-container
+                  *ngIf="
+                    !getScheduleByClassType(schedule, 1)[rowIndex] as session
+                  "
+                >
+                <div >
+                    <h6>-</h6>
+                    </div>
+                </ng-container>
+              </td>
+  
+              <!-- LAP  -->
+              <td>
+                <span class="box-number">#{{ rowIndex * 2 + 2 }}</span
+                ><br />
+  
+                <ng-container
+                  *ngIf="getScheduleByClassType(schedule, 0)[rowIndex] as lap"
+                >
+                  <div>
+                    {{ lap.startTime }} - {{ lap.endTime }}<br />
+                    {{ lap.description }}  <br> (Group {{ lap.name }})
+                    <br />
+                    cell :{{ lap.cellNumber }} <br />
+                  </div>
+                  <div >
+                    <h6>-</h6>
+                    </div>
+                </ng-container>
+  
+                <ng-container
+                  *ngIf="!getScheduleByClassType(schedule, 0)[rowIndex] as lap"
+                >
+                <div >
+                    <h6>-</h6>
+                    </div>
+                </ng-container>
+              </td>
+            </ng-container>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+  
+  
+  
+
+  
+  
+  
+  <div *ngIf="isWeeklyView" id="weeklySchedule">
+  
+  
+    <div class="week-navigation" style="margin-bottom: 10px; display: flex; justify-content: center;">
+      <button (click)="previousWeek()" [disabled]="currentWeekIndex === 0">
+        ⬅️ Previous
+      </button>
+      <button
+        (click)="nextWeek()"
+        [disabled]="(currentWeekIndex + 1) * 7 >= scheduleData.length"
+      >
+        Next ➡️
+      </button>
+    </div>
+  
+    <div style="margin-top: 20px">
+      <button (click)="downloadElementAsPDF()">
+        Download Weekly View as PDF
+      </button>
+    </div>
+    <!-- TABLE SECTION -->
+    <table>
+      <thead>
+        <tr>
+          <th *ngFor="let schedule of weeklySchedule" colspan="2">
+            {{ schedule.date | date : "yyyy-MM-dd" }}
+          </th>
+        </tr>
+        <tr>
+          <ng-container *ngFor="let schedule of weeklySchedule">
+            <th>Session</th>
+            <th>Lap</th>
+          </ng-container>
+        </tr>
+      </thead>
+  
+      <tbody>
+        <tr *ngFor="let row of [0, 1, 2, 3, 4, 5]; let rowIndex = index">
+          <ng-container *ngFor="let schedule of weeklySchedule">
+            <!--holiday   -->
+            <ng-container *ngIf="schedule.classSchedule === 2">
+              <ng-container *ngIf="rowIndex === 0">
+                <td class="holiday-cell" [attr.rowspan]="6" colspan="2">
+                  <div>
+                    <span class="small-holiday-number">#{{ rowIndex + 1 }}</span
+                    ><br />
+                    {{ schedule.holidayDetail?.holidayName }}
+                    <div >
+                        <h6>-</h6>
+                        </div>
+                  </div>
+                </td>
+              </ng-container>
+            </ng-container>
+  
+            <!-- No Add  -->
+            <ng-container *ngIf="schedule.classSchedule == 0">
+              <td>
+                <span class="box-number">#{{ rowIndex * 2 + 1 }}</span
+                ><br />
+                <div >
+                    <h6>-</h6>
+                    </div>
+              </td>
+              <td>
+                <span class="box-number">#{{ rowIndex * 2 + 2 }}</span
+                ><br />
+                <div >
+                    <h6>-</h6>
+                    </div>
+              </td>
+            </ng-container>
+  
+            <!-- CLASS  -->
+            <ng-container *ngIf="schedule.classSchedule === 1">
+              <!-- SESSION  -->
+              <td>
+                <span class="box-number">#{{ rowIndex * 2 + 1 }}</span
+                ><br />
+  
+                <ng-container
+                  *ngIf="getScheduleByClassType(schedule, 1)[rowIndex] as session"
+                >
+                  <div>
+                    {{ session.startTime }} - {{ session.endTime }}
+                    {{ session.description }}<br />
+                    cell :{{ session.cellNumber }} <br />
+                    (Group {{ session.name }})
+                    <div >
+                        <h6>-</h6>
+                        </div>
+                  </div>
+                </ng-container>
+  
+                <ng-container
+                  *ngIf="
+                    !getScheduleByClassType(schedule, 1)[rowIndex] as session
+                  "
+                >
+                <div >
+                    <h6>-</h6>
+                    </div>
+                </ng-container>
+              </td>
+  
+              <!-- LAP  -->
+              <td>
+                <span class="box-number">#{{ rowIndex * 2 + 2 }}</span
+                ><br />
+  
+                <ng-container
+                  *ngIf="getScheduleByClassType(schedule, 0)[rowIndex] as lap"
+                >
+                  <div>
+                    {{ lap.startTime }} - {{ lap.endTime }}<br />
+                    {{ lap.description }} (Group {{ lap.groupId }})
+                  </div>
+                  <div >
+                    <h6>-</h6>
+                    </div>
+                </ng-container>
+  
+                <ng-container
+                  *ngIf="!getScheduleByClassType(schedule, 0)[rowIndex] as lap"
+                >
+                <div >
+                    <h6>-</h6>
+                    </div>
+                </ng-container>
+              </td>
+            </ng-container>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+ 
+  
+  
+  
+  
+ 
