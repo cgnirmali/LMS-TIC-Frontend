@@ -1,21 +1,30 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { Course, CourseApiResponse } from './models/models';
 
-export interface Course {
-  id: number;
-  name: string;
-}
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class CourseService {
-  private apiUrl = 'https://localhost:7265/api/Course'; // Replace with your actual course API endpoint
+  private apiUrl = 'https://localhost:7265/api'; // <-- Your base URL
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getCourses(): Observable<Course[]> {
-    return this.http.get<Course[]>(this.apiUrl);
+  getAllCourses(): Observable<Course[]> {
+    return this.http.get<CourseApiResponse>(`${this.apiUrl}/Course`)
+      .pipe(
+        map(response => response.$values) // Only take the list of courses
+      );
   }
+
+  addCourse(courseData: { name: string; batchId: string }): Observable<Course> {
+    return this.http.post<Course>(`${this.apiUrl}/Course`, courseData);
+  }
+  deleteCourse(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/Course/${id}`);
+  }
+  
 }

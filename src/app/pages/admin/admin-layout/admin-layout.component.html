@@ -49,12 +49,26 @@
       <span class="tooltip">Timetable List</span>
     </li>
     <li>
-      <a href="#" [routerLink]="['/admin/class-management']">
+      <div class="nav-link" (click)="toggleClassStructure()">
         <i class='bx bx-sitemap'></i>
-        <span class="links_name">class structure</span>
-      </a>
-      <span class="tooltip">class structure</span>
+        <span class="links_name">Class Structure</span>
+        <i class='bx' [ngClass]="classDropdownOpen ? 'bx-chevron-up' : 'bx-chevron-down'" style="margin-left:auto;"></i>
+      </div>
+    
+      <ul *ngIf="classDropdownOpen" class="submenu">
+        <li>
+          <a [routerLink]="['/admin/manage-batch&course']">
+            <span class="links_name">Batch</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/admin/manage-group&subject']">
+            <span class="links_name">Group</span>
+          </a>
+        </li>
+      </ul>
     </li>
+    
     <li>
       <a href="#" [routerLink]="['/admin/viewFeedback']">
         <i class='bx bx-message-dots'></i>

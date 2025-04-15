@@ -4,6 +4,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { Staff } from '../../../services/models/models';
+import { StaffService } from '../../../services/staff.service';
+import { Modal } from 'bootstrap';
+
 
 @Component({
   selector: 'app-staff-management',
@@ -12,90 +16,164 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   styleUrl: './staff-management.component.css'
 })
 export class StaffManagementComponent implements OnInit {
-  staffs: any[] = [];
-  registrationForm: FormGroup;
+  staffs: Staff[] = [];
+  registrationForm!: FormGroup;
+  selectedStaff: Staff | null = null;
+  selectedStaffId: number | null = null;
+  isEditMode: boolean = false; // <-- Add this property to track edit mode
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
-    this.registrationForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]],
-      lastName: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]],
-      gender: ['', Validators.required],
-      phonenumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-      nic: ['', [Validators.required, Validators.pattern('^[0-9]{9}[VvXx]?$')]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      ConfirmPassword: ['', Validators.required],
-      address: ['', Validators.required],
-    }, { validators: this.passwordMatchValidator });
-  }
+  constructor(
+    private fb: FormBuilder,
+    private staffService: StaffService
+  ) {}
 
   ngOnInit(): void {
+    this.initializeForm();
     this.loadStaffs();
   }
 
+  initializeForm() {
+    this.registrationForm = this.fb.group({
+      name: ['', Validators.required],
+      nic: ['', Validators.required],
+      userEmail: ['', [Validators.required, Validators.email]],
+      utEmail: ['', this.isEditMode ? [] : [Validators.required, Validators.email]],  // Dynamically add/remove 'required' validator
+      utPassword: ['', this.isEditMode ? [] : [Validators.required, Validators.minLength(6)]], // Dynamically add/remove 'required' validator
+      address: ['', Validators.required],
+      phoneNumber: ['', Validators.required]
+    });
+  }
+  
+
   loadStaffs() {
-    this.http.get('https://localhost:7265/api/Staff/Get_All_Staff').subscribe(
-      (response: any) => {
-        if (response.status === 'success') {
-          this.staffs = response.data;
-        } else {
-          console.error('Failed to fetch staff data');
-        }
+    this.staffService.getAllStaffs().subscribe({
+      next: (response: any) => {
+        this.staffs = response.data?.$values || [];
       },
-      (error) => {
-        console.error('API error:', error);
+      error: (err) => {
+        console.error('Error fetching staff', err);
       }
-    );
+    });
   }
-
-  EditStaff(id: string) {
-    this.http.get(`https://localhost:7265/api/Staff/Get_Staff/${id}`).subscribe(
-      (response: any) => {
-        if (response.status === 'success') {
-          const staff = response.data;
-          this.registrationForm.patchValue({
-            firstName: staff.firstName,
-            lastName: staff.lastName,
-            gender: staff.gender,
-            phonenumber: staff.phoneNumber,
-            nic: staff.nic,
-            password: '', // You might want to leave password empty for security
-            ConfirmPassword: '', // Same for confirm password
-            address: staff.address
-          });
-        } else {
-          console.error('Failed to fetch staff details');
-        }
-      },
-      (error) => {
-        console.error('API error:', error);
-      }
-    );
-  }
-
-  DeleteStaff(id: string) {
-    if (confirm('Are you sure you want to delete this staff?')) {
-      this.http.delete(`https://localhost:7265/api/Staff/Delete_Staff/${id}`).subscribe(
-        (response: any) => {
-          alert('Staff deleted successfully!');
-          this.loadStaffs(); // Refresh the list
-        },
-        (error) => {
-          console.error('Error deleting staff:', error);
-        }
-      );
-    }
-  }
-
   register() {
-    if (this.registrationForm.valid) {
-      console.log('User Registered:', this.registrationForm.value);
-      alert('Registration Successful!');
-      this.registrationForm.reset();
-      this.loadStaffs(); // Reload staff list after registration
+    if (this.registrationForm.invalid) return;
+  
+    const staffData = {
+      name: this.registrationForm.value.name,
+      userEmail: this.registrationForm.value.userEmail,
+      phoneNumber: this.registrationForm.value.phoneNumber,
+      address: this.registrationForm.value.address,
+      nic: this.registrationForm.value.nic,
+      // Include these fields only when adding new staff
+      utEmail: this.isEditMode ? null : this.registrationForm.value.utEmail,
+      utPassword: this.isEditMode ? null : this.registrationForm.value.utPassword
+    };
+  
+    if (this.isEditMode && this.selectedStaff) {
+      // Update existing staff
+      this.staffService.updateStaff(this.selectedStaff.id, staffData).subscribe({
+        next: () => {
+          this.loadStaffs();
+          this.registrationForm.reset();
+          this.selectedStaff = null;
+          this.isEditMode = false;
+          this.closeStaffModal();
+        },
+        error: (err) => console.error('Error updating staff', err)
+      });
+    } else {
+      // Add new staff
+      this.staffService.addStaff(staffData).subscribe({
+        next: () => {
+          this.loadStaffs();
+          this.registrationForm.reset();
+          this.closeStaffModal();
+        },
+        error: (err) => console.error('Error adding staff', err)
+      });
+    }
+  }
+  
+
+  closeStaffModal() {
+    const modalElement = document.getElementById('staffbackdrop');
+    if (modalElement) {
+      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+      modal.hide();
     }
   }
 
-  passwordMatchValidator(form: FormGroup) {
-    return form.get('password')?.value === form.get('ConfirmPassword')?.value ? null : { mismatch: true };
+  openDetailsModal(staff: Staff) {
+    this.selectedStaff = staff;
+    const modalElement = document.getElementById('detailsModal');
+    if (modalElement) {
+      const modal = new Modal(modalElement);
+      modal.show();
+    }
   }
-}
+
+  closeDetailsModal() {
+    const modalElement = document.getElementById('detailsModal');
+    if (modalElement) {
+      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+      modal.hide();
+    }
+  }
+
+  DeleteStaff(id: number | undefined) {
+    // Ensure id is defined before proceeding with deletion
+    if (id === undefined) {
+      console.error('Staff ID is undefined');
+      return; // Exit early if ID is undefined
+    }
+  
+    if (confirm('Are you sure you want to delete this staff member?')) {
+      this.staffService.deleteStaff(id).subscribe({
+        next: () => this.loadStaffs(),
+        error: (err) => console.error('Error deleting staff', err)
+      });
+    }
+  }EditStaff(id: number | undefined) {
+    if (id === undefined) {
+      console.error('Staff ID is undefined');
+      return;
+    }
+  
+    const staffToEdit = this.staffs.find(s => s.id === id);
+    if (staffToEdit) {
+      this.selectedStaff = staffToEdit;
+      this.isEditMode = true; // Set edit mode to true
+  
+      // Initialize form with existing values
+      this.registrationForm.patchValue({
+        name: staffToEdit.name,
+        nic: staffToEdit.nic,
+        userEmail: staffToEdit.userEmail,
+        address: staffToEdit.address,
+        phoneNumber: staffToEdit.phoneNumber,
+        utEmail: null,  // Set to null instead of empty string in edit mode
+        utPassword: null // Set to null instead of empty string in edit mode
+      });
+  
+      // Dynamically update validation based on edit mode
+      this.registrationForm.get('utEmail')?.setValidators(this.isEditMode ? [] : [Validators.required, Validators.email]);
+      this.registrationForm.get('utPassword')?.setValidators(this.isEditMode ? [] : [Validators.required, Validators.minLength(6)]);
+  
+      // Update the validity of these fields based on the new validators
+      this.registrationForm.get('utEmail')?.updateValueAndValidity();
+      this.registrationForm.get('utPassword')?.updateValueAndValidity();
+  
+      // Mark the form as pristine to avoid validation issues
+      this.registrationForm.markAsPristine();
+  
+      // Open modal
+      const modalElement = document.getElementById('staffbackdrop');
+      if (modalElement) {
+        const modal = new Modal(modalElement);
+        modal.show();
+      }
+    }
+  }
+  
+  
+}  
