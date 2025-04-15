@@ -91,7 +91,7 @@
                   *ngIf="getScheduleByClassType(schedule, 1)[rowIndex] as session"
                 >
                   <div>
-                    {{ session.startTime }} - {{ session.endTime }}
+                    {{ session.startTime }} - {{ session.endTime }}<br />
                     {{ session.description }}<br />
                     cell :{{ session.cellNumber }} <br />
                     (Group {{ session.name }})
@@ -121,7 +121,7 @@
                   *ngIf="getScheduleByClassType(schedule, 0)[rowIndex] as lap"
                 >
                   <div>
-                    {{ lap.startTime }} - {{ lap.endTime }}<br />
+                    {{ lap.startTime }} - {{ lap.endTime }}<br >
                     {{ lap.description }}  <br> (Group {{ lap.name }})
                     <br />
                     cell :{{ lap.cellNumber }} <br />
@@ -237,7 +237,7 @@
                   *ngIf="getScheduleByClassType(schedule, 1)[rowIndex] as session"
                 >
                   <div>
-                    {{ session.startTime }} - {{ session.endTime }}
+                    {{ session.startTime }} - {{ session.endTime }}<br >
                     {{ session.description }}<br />
                     cell :{{ session.cellNumber }} <br />
                     (Group {{ session.name }})
@@ -292,7 +292,9 @@
   
  
   
-  
+  <div *ngIf="showCreateButton" class="create-button-container">
+   
+  </div>
   
   
  
