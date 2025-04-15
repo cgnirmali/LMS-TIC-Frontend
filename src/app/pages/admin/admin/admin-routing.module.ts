@@ -4,8 +4,10 @@ import { AdminLayoutComponent } from '../admin-layout/admin-layout.component';
 import { StaffManagementComponent } from '../../../components/admin/staff-management/staff-management.component';
 import { LecturerManagementComponent } from '../../../components/admin/lecturer-management/lecturer-management.component';
 import { StudentManagementComponent } from '../../../components/admin/student-management/student-management.component';
+import { ScheduleComponent } from '../../../components/admin/schedule/schedule.component';
 import { BatchCourseComponent } from '../../../components/admin/batch-course/batch-course.component';
 import { GroupSubjectComponent } from '../../../components/admin/group-subject/group-subject.component';
+
 
 const routes: Routes = [
   {
@@ -33,6 +35,10 @@ const routes: Routes = [
     {
       path:'student-management',
       component:StudentManagementComponent,
+    },
+    {
+      path:'schedule',
+      component:ScheduleComponent,
     }
   ]
   }

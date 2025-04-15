@@ -23,9 +23,9 @@
                   <div class="form-outline mb-4">
                     <label class="form-label" for="form2Example22"><i class="bi bi-key-fill"></i> Password</label>
                     <input type="password" id="form2Example22" class="form-control" placeholder="Enter Password" formControlName="password" />
-                    <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger">
+                    <!-- <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger">
                       Password must be at least 6 characters long.
-                    </div>
+                    </div> -->
                   </div>
 
                   <!-- Display a general error message if login fails -->
@@ -37,8 +37,8 @@
                     <button data-mdb-button-init data-mdb-ripple-init class="btn btn-secondary btn-block mb-2 mt-5" [disabled]="isLoading">
                       {{ isLoading ? 'Logging in...' : 'Log in' }}
                     </button>
-                    <a class="text-muted mb-1 mt-2" [routerLink]="['/forgotPassword']">Forgot password?</a>
-                    <a class="text-muted mb-1 mt-2" [routerLink]="['/register']">Don't have an account? Register</a>
+                    <!-- <a class="text-muted mb-1 mt-2" [routerLink]="['/forgotPassword']"></a> -->
+                    <a class="text-muted mb-1 mt-2" [routerLink]="['/register']">Forgot password?</a>
                   </div>
                 </form>
               </div>

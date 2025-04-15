@@ -42,7 +42,7 @@
       <span class="tooltip">Attendance Overview</span>
     </li>
     <li>
-      <a href="#" [routerLink]="['/admin/viewTimetable']">
+      <a href="#" [routerLink]="['/admin/schedule']">
         <i class='bx bx-calendar'></i>
         <span class="links_name">Timetable List</span>
       </a>
@@ -88,12 +88,27 @@
 </div>
 
 <section class="home-section" [class.open]="isOpen">
+  <div class="scetiondiv">
+  <header class="header" id="header">
+    <div class="header__container">
+      <button class="header__toggle" id="header-toggle" (click)="toggleCollapse()">
+        <i class="ri-menu-line"></i>
+      </button>
+      <div class="nav-icons">
+        <button class="header__notification" id="header-toggle" (click)="toggleCollapse()">
+          <span class="notification-indicator">1</span>
+          <i class="bi bi-bell-fill"></i>
+        </button>
+        <div class="sidebar__img">
+          <img [src]="imageUrl" alt="Profile Image" id="profileImage">
+          <span class="status-indicator"></span>
+        </div>
+      </div>
+    </div>
+  </header>
   <div class="text">
     <router-outlet></router-outlet>
   </div>
+  
+</div>
 </section>
-
-
-
-
-

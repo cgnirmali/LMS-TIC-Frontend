@@ -10,7 +10,13 @@ import { Group, GroupApiResponse } from './models/models';
 export class GroupService {
   private apiUrl = 'https://localhost:7265/api/Group';
 
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) { }
+  getGroups(): Observable<Group[]> {
+    return this.http.get<any>(this.apiUrl).pipe(
+      map((response: { $values: any; }) => response.$values)
+
+  
 
   getGroups(): Observable<Group[]> {
     return this.http.get<GroupApiResponse>(this.apiUrl).pipe(
@@ -19,6 +25,7 @@ export class GroupService {
         console.error('Error fetching groups', error);
         return throwError(() => new Error('Error fetching groups'));
       })
+
     );
   }
 
@@ -39,4 +46,14 @@ export class GroupService {
       })
     );
   }
+
+
+  rejectGroup(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`, {});
+  }
 }
+
+
+
+}
+
